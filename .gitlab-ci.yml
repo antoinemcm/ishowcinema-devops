@@ -2,6 +2,7 @@ image: alpine:latest
 
 stages:
   - test
+  - unit-test
   - deploy
 
 
@@ -15,6 +16,15 @@ test:
     - if [ ! -f simple_app/styles.css ]; then echo "Erreur - styles.css manquant !"; exit 1; fi
     - if [ ! -f simple_app/script.js ]; then echo "Erreur - script.js manquant !"; exit 1; fi    
     - echo "Tous les fichiers sont bien présents !"
+
+unit-test:
+  stage: unit-test
+  image: node:18
+  script:
+    - echo "Installation des dépendances Node.js (Jest, etc.)..."
+    - npm install
+    - echo "Lancement des tests unitaires avec Jest..."
+    - npm test
 
 deploy:
   stage: deploy
