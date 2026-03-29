@@ -19,6 +19,7 @@ test:
 
 unit-test:
   stage: unit-test
+  image: node:18
   script:
     - echo "Installation des dépendances Node.js (Jest, etc.)..."
     - npm install
