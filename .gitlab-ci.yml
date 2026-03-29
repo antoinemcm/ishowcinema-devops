@@ -1,7 +1,20 @@
 image: alpine:latest
 
 stages:
+  - test
   - deploy
+
+
+test:
+  stage: test
+  image: alpine
+  script:
+    - echo "Vérification de la présence des fichiers..."
+    # On vérifie dans ton dossier simple_app
+    - if [ ! -f simple_app/index.html ]; then echo "Erreur - index.html est manquant !"; exit 1; fi
+    - if [ ! -f simple_app/styles.css ]; then echo "Erreur - styles.css manquant !"; exit 1; fi
+    - if [ ! -f simple_app/script.js ]; then echo "Erreur - script.js manquant !"; exit 1; fi    
+    - echo "Tous les fichiers sont bien présents !"
 
 deploy:
   stage: deploy
