@@ -1,0 +1,56 @@
+stages:
+  - test
+  - build
+  - deploy
+
+# -------------------------
+# 1. Vérification des fichiers (Ton code était top !)
+# -------------------------
+test_files:
+  stage: test
+  image: alpine:latest
+  tags:
+    - local
+  script:
+    - echo "Vérification de la présence des fichiers vitaux..."
+    - if [ ! -f backend/main.py ]; then echo "Erreur - main.py est manquant !"; exit 1; fi
+    - if [ ! -f backend/movies.json ]; then echo "Erreur - movies.json est manquant !"; exit 1; fi
+    - if [ ! -f frontend/index.html ]; then echo "Erreur - index.html est manquant !"; exit 1; fi
+    - if [ ! -f frontend/package.json ]; then echo "Erreur - package.json est manquant !"; exit 1; fi
+    - echo "Tous les fichiers sont présents. L'architecture est valide !"
+
+# -------------------------
+# 2. Construction de ton site React (NOUVEAU)
+# -------------------------
+build_frontend:
+  stage: build
+  image: node:22
+  tags:
+    - local
+  script:
+    - echo "Installation et compilation de React..."
+    - cd frontend
+    - npm install
+    - npm run build
+  artifacts:
+    # On garde le dossier "dist" créé par Vite en mémoire
+    paths:
+      - frontend/dist/
+
+# -------------------------
+# 3. Déploiement sur GitLab Pages
+# -------------------------
+pages:
+  stage: deploy
+  image: alpine:latest
+  tags:
+    - local
+  script:
+    - echo "Déploiement du site..."
+    # On renomme le dossier compilé "dist" en "public" (obligatoire pour GitLab)
+    - mv frontend/dist public
+  artifacts:
+    paths:
+      - public
+  only:
+    - main
