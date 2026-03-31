@@ -24,10 +24,18 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  /* On a supprimé le flex et le centrage forcé ! */
+}
+
+/* Ajoute ceci juste en dessous pour forcer la page à prendre toute la largeur */
+#root {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  text-align: left;
 }
 
 h1 {
