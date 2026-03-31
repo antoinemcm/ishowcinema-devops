@@ -1,0 +1,44 @@
+# =========================
+# 🐍 Backend (Python / FastAPI)
+# =========================
+# Fichiers de cache Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environnements virtuels (si tu en utilises un jour)
+venv/
+.venv/
+env/
+
+# Variables d'environnement (secrets, mots de passe)
+.env
+.env.*
+
+# =========================
+# ⚛️ Frontend (React / Vite / Node.js)
+# =========================
+# Les dépendances (le trou noir de l'espace)
+node_modules/
+frontend/node_modules/
+
+# Le dossier de build (généré automatiquement par Vite)
+dist/
+frontend/dist/
+dist-ssr/
+
+# Logs d'erreurs npm
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# =========================
+# 💻 Éditeur & Système (VS Code, Mac, etc.)
+# =========================
+# Fichiers de configuration de ton IDE
+.vscode/
+.idea/
+
+# Fichiers cachés de macOS et Windows
+.DS_Store
+Thumbs.db

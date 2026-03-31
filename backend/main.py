@@ -5,6 +5,15 @@ from typing import Optional
 
 app = FastAPI()
 DATA_PATH = Path(__file__).parent / "movies.json"
+from fastapi.middleware.cors import CORSMiddleware
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], 
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/hello")
 def hello():

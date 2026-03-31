@@ -1,7 +1,7 @@
 function Header() {
   return (
     <header className="header">
-      <h1>Smash or Pass</h1>
+      <h1>IShowCinema</h1>
     </header>
   );
 }

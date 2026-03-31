@@ -1,13 +1,13 @@
-function MovieCard({ title, year, rating, description, image }) {
+function MovieCard(props) {
   return (
     <div className="card">
-      <img src={image} alt={title} />
+      <img src={props.img} alt={props.title} />
 
       <div className="card-content">
-        <h2>{title}</h2>
+        <h2>{props.title}</h2>
 
         <p className="meta">
-          {year} • ⭐ {rating}
+          {props.year} • ⭐ {props.rating}
         </p>
 
         <p className="desc">{description}</p>
