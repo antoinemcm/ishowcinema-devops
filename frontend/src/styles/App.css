@@ -11,8 +11,20 @@ body {
 
 .header {
   padding: 24px 16px;
-  background: white;
-  border-bottom: 1px solid #ddd;
+  /* On remplace le blanc par un noir profond ou le gris de ton body */
+  background: #1a1d23; 
+  /* On change la bordure pour qu'elle ne soit pas trop claire */
+  border-bottom: 1px solid #343a40;
+  text-align: center;
+}
+
+/* TRÈS IMPORTANT : Il faut changer la couleur du texte à l'intérieur */
+.header h1 {
+  color: white;
+  margin: 0;
+  font-size: 2.5rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
 }
 
 .container {
