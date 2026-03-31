@@ -8,6 +8,8 @@ stages:
 
 test:
   stage: test
+  tags:
+    - local
   image: alpine
   script:
     - echo "Vérification de la présence des fichiers..."
