@@ -4,184 +4,209 @@
     "year": 2010,
     "director": "Christopher Nolan",
     "genre": "Sci-Fi",
-    "image_url": "/images/image_1.jpeg"
+    "image_url": "https://m.media-amazon.com/images/I/91Rc8cAmnAL._AC_SY679_.jpg"
   },
   {
     "title": "Interstellar",
     "year": 2014,
     "director": "Christopher Nolan",
     "genre": "Sci-Fi",
-    "image_url": "/images/image_2.jpeg"
+    "image_url": "https://m.media-amazon.com/images/I/A1JVqNMI7UL._AC_SY679_.jpg"
   },
   {
     "title": "The Dark Knight",
     "year": 2008,
     "director": "Christopher Nolan",
     "genre": "Action",
-    "image_url": "/images/image_3.jpeg"
+    "image_url": "https://m.media-amazon.com/images/I/91KkWf50SoL._AC_SY679_.jpg"
   },
   {
     "title": "Pulp Fiction",
     "year": 1994,
     "director": "Quentin Tarantino",
     "genre": "Crime",
-    "image_url": "/images/image_4.jpeg"
+    "image_url": "https://m.media-amazon.com/images/I/81UTs3sC5hL._AC_SY679_.jpg"
   },
   {
     "title": "Kill Bill: Vol. 1",
     "year": 2003,
     "director": "Quentin Tarantino",
     "genre": "Action",
-    "image_url": "/images/image_5.jpeg"
+    "image_url": "https://m.media-amazon.com/images/I/81S6UqZ7L-L._AC_SY679_.jpg"
   },
   {
     "title": "The Shawshank Redemption",
     "year": 1994,
     "director": "Frank Darabont",
-    "genre": "Drama"
+    "genre": "Drama",
+    "image_url": "https://m.media-amazon.com/images/I/519NBNHX5BL._AC_SY679_.jpg"
   },
   {
     "title": "Forrest Gump",
     "year": 1994,
     "director": "Robert Zemeckis",
-    "genre": "Drama"
+    "genre": "Drama",
+    "image_url": "https://m.media-amazon.com/images/I/61mNStpC0vL._AC_SY679_.jpg"
   },
   {
     "title": "The Matrix",
     "year": 1999,
     "director": "Lana Wachowski, Lilly Wachowski",
-    "genre": "Sci-Fi"
+    "genre": "Sci-Fi",
+    "image_url": "https://m.media-amazon.com/images/I/51EG732BV3L._AC_SY679_.jpg"
   },
   {
     "title": "Fight Club",
     "year": 1999,
     "director": "David Fincher",
-    "genre": "Drama"
+    "genre": "Drama",
+    "image_url": "https://m.media-amazon.com/images/I/81D+KJkO4AL._AC_SY679_.jpg"
   },
   {
     "title": "Se7en",
     "year": 1995,
     "director": "David Fincher",
-    "genre": "Thriller"
+    "genre": "Thriller",
+    "image_url": "https://m.media-amazon.com/images/I/51rRtoas9XL._AC_SY679_.jpg"
   },
   {
     "title": "The Social Network",
     "year": 2010,
     "director": "David Fincher",
-    "genre": "Drama"
+    "genre": "Drama",
+    "image_url": "https://m.media-amazon.com/images/I/81Y7y6O206L._AC_SY679_.jpg"
   },
   {
     "title": "The Godfather",
     "year": 1972,
     "director": "Francis Ford Coppola",
-    "genre": "Crime"
+    "genre": "Crime",
+    "image_url": "https://m.media-amazon.com/images/I/81Vf86vW9KL._AC_SY679_.jpg"
   },
   {
     "title": "The Godfather Part II",
     "year": 1974,
     "director": "Francis Ford Coppola",
-    "genre": "Crime"
+    "genre": "Crime",
+    "image_url": "https://m.media-amazon.com/images/I/81A+X2XyZPL._AC_SY679_.jpg"
   },
   {
     "title": "Goodfellas",
     "year": 1990,
     "director": "Martin Scorsese",
-    "genre": "Crime"
+    "genre": "Crime",
+    "image_url": "https://m.media-amazon.com/images/I/81L-uWp30CL._AC_SY679_.jpg"
   },
   {
     "title": "Taxi Driver",
     "year": 1976,
     "director": "Martin Scorsese",
-    "genre": "Drama"
+    "genre": "Drama",
+    "image_url": "https://m.media-amazon.com/images/I/81GZ6nJ3u8L._AC_SY679_.jpg"
   },
   {
     "title": "Parasite",
     "year": 2019,
     "director": "Bong Joon-ho",
-    "genre": "Thriller"
+    "genre": "Thriller",
+    "image_url": "https://m.media-amazon.com/images/I/91K99shY6uL._AC_SY679_.jpg"
   },
   {
     "title": "Spirited Away",
     "year": 2001,
     "director": "Hayao Miyazaki",
-    "genre": "Animation"
+    "genre": "Animation",
+    "image_url": "https://m.media-amazon.com/images/I/91eK68u-H9L._AC_SY679_.jpg"
   },
   {
     "title": "Princess Mononoke",
     "year": 1997,
     "director": "Hayao Miyazaki",
-    "genre": "Animation"
+    "genre": "Animation",
+    "image_url": "https://m.media-amazon.com/images/I/91Z17-T7y+L._AC_SY679_.jpg"
   },
   {
     "title": "Amélie",
     "year": 2001,
     "director": "Jean-Pierre Jeunet",
-    "genre": "Romance"
+    "genre": "Romance",
+    "image_url": "https://m.media-amazon.com/images/I/51K3F965N7L._AC_SY679_.jpg"
   },
   {
     "title": "La Haine",
     "year": 1995,
     "director": "Mathieu Kassovitz",
-    "genre": "Drama"
+    "genre": "Drama",
+    "image_url": "https://m.media-amazon.com/images/I/51V10P762NL._AC_SY679_.jpg"
   },
   {
     "title": "The Intouchables",
     "year": 2011,
     "director": "Olivier Nakache, Éric Toledano",
-    "genre": "Comedy"
+    "genre": "Comedy",
+    "image_url": "https://m.media-amazon.com/images/I/71u9SreZ0GL._AC_SY679_.jpg"
   },
   {
     "title": "Gladiator",
     "year": 2000,
     "director": "Ridley Scott",
-    "genre": "Action"
+    "genre": "Action",
+    "image_url": "https://m.media-amazon.com/images/I/51f9S7H71vL._AC_SY679_.jpg"
   },
   {
     "title": "Alien",
     "year": 1979,
     "director": "Ridley Scott",
-    "genre": "Sci-Fi"
+    "genre": "Sci-Fi",
+    "image_url": "https://m.media-amazon.com/images/I/71R27Jtq0ML._AC_SY679_.jpg"
   },
   {
     "title": "Blade Runner 2049",
     "year": 2017,
     "director": "Denis Villeneuve",
-    "genre": "Sci-Fi"
+    "genre": "Sci-Fi",
+    "image_url": "https://m.media-amazon.com/images/I/91fS-yBf97L._AC_SY679_.jpg"
   },
   {
     "title": "Arrival",
     "year": 2016,
     "director": "Denis Villeneuve",
-    "genre": "Sci-Fi"
+    "genre": "Sci-Fi",
+    "image_url": "https://m.media-amazon.com/images/I/71X8kE0y+CL._AC_SY679_.jpg"
   },
   {
     "title": "Whiplash",
     "year": 2014,
     "director": "Damien Chazelle",
-    "genre": "Drama"
+    "genre": "Drama",
+    "image_url": "https://m.media-amazon.com/images/I/81q67z5O7VL._AC_SY679_.jpg"
   },
   {
     "title": "La La Land",
     "year": 2016,
     "director": "Damien Chazelle",
-    "genre": "Musical"
+    "genre": "Musical",
+    "image_url": "https://m.media-amazon.com/images/I/91jr6O-v8DL._AC_SY679_.jpg"
   },
   {
     "title": "Joker",
     "year": 2019,
     "director": "Todd Phillips",
-    "genre": "Drama"
+    "genre": "Drama",
+    "image_url": "https://m.media-amazon.com/images/I/71geV3pL4DL._AC_SY679_.jpg"
   },
   {
     "title": "Mad Max: Fury Road",
     "year": 2015,
     "director": "George Miller",
-    "genre": "Action"
+    "genre": "Action",
+    "image_url": "https://m.media-amazon.com/images/I/91YI9YlP7FL._AC_SY679_.jpg"
   },
   {
     "title": "The Grand Budapest Hotel",
     "year": 2014,
     "director": "Wes Anderson",
-    "genre": "Comedy"
+    "genre": "Comedy",
+    "image_url": "https://m.media-amazon.com/images/I/91mZl2p-99L._AC_SY679_.jpg"
   }
 ]
