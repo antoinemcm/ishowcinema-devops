@@ -1,38 +1,54 @@
-image: alpine:latest
-
 stages:
   - test
-  - unit-test
+  - build
   - deploy
 
-
-test:
+# -------------------------
+# 1. Vérification des fichiers (Ton code était top !)
+# -------------------------
+test_files:
   stage: test
+  image: alpine:latest
   tags:
     - local
-  image: alpine
   script:
-    - echo "Vérification de la présence des fichiers..."
-    # On vérifie dans ton dossier simple_app
-    - if [ ! -f simple_app/index.html ]; then echo "Erreur - index.html est manquant !"; exit 1; fi
-    - if [ ! -f simple_app/styles.css ]; then echo "Erreur - styles.css manquant !"; exit 1; fi
-    - if [ ! -f simple_app/script.js ]; then echo "Erreur - script.js manquant !"; exit 1; fi    
-    - echo "Tous les fichiers sont bien présents !"
+    - echo "Vérification de la présence des fichiers vitaux..."
+    - if [ ! -f backend/main.py ]; then echo "Erreur - main.py est manquant !"; exit 1; fi
+    - if [ ! -f backend/movies.json ]; then echo "Erreur - movies.json est manquant !"; exit 1; fi
+    - if [ ! -f frontend/index.html ]; then echo "Erreur - index.html est manquant !"; exit 1; fi
+    - if [ ! -f frontend/package.json ]; then echo "Erreur - package.json est manquant !"; exit 1; fi
+    - echo "Tous les fichiers sont présents. L'architecture est valide !"
 
-unit-test:
-  stage: unit-test
-  image: node:18
+# -------------------------
+# 2. Construction de ton site React (NOUVEAU)
+# -------------------------
+build_frontend:
+  stage: build
+  image: node:22
+  tags:
+    - local
   script:
-    - echo "Installation des dépendances Node.js (Jest, etc.)..."
+    - echo "Installation et compilation de React..."
+    - cd frontend
     - npm install
-    - echo "Lancement des tests unitaires avec Jest..."
-    - npm test
+    - npm run build
+  artifacts:
+    # On garde le dossier "dist" créé par Vite en mémoire
+    paths:
+      - frontend/dist/
 
-deploy:
+# -------------------------
+# 3. Déploiement sur GitLab Pages
+# -------------------------
+pages:
   stage: deploy
+  image: alpine:latest
+  tags:
+    - local
   script:
-    - mkdir -p public
-    - cp simple_app/index.html simple_app/styles.css simple_app/script.js public/
+    - echo "Déploiement du site..."
+    # On renomme le dossier compilé "dist" en "public" (obligatoire pour GitLab)
+    - mv frontend/dist public
   artifacts:
     paths:
       - public
