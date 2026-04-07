@@ -3,31 +3,40 @@ import './styles/App.css';
 import Header from "./components/Header";
 import Home from "./pages/Home";
 import Auth from "./components/Auth";
-import Profile from "./components/Profil"; // On n'oublie pas d'importer la nouvelle page
+import Profile from "./pages/Profile"; // Vérifie bien si c'est Profile ou Profil (avec ou sans 'e')
+import { SearchProvider } from "./context/SearchContext";
 
 function App() {
-  // 'home' par défaut. Peut devenir 'auth' ou 'profile'
+  // L'état 'view' gère quelle page est affichée : 'home', 'auth', ou 'profile'
   const [view, setView] = useState('home');
 
+  // Fonction pour gérer le succès du login et rediriger vers l'accueil
+  const handleLoginSuccess = () => {
+    setView('home');
+  };
+
   return (
-    <div className="App">
-      <Header 
-        onLoginClick={() => setView('auth')} 
-        onHomeClick={() => setView('home')}
-        onProfileClick={() => setView('profile')}
-      />
+    <SearchProvider>
+      <div className="App">
+        {/* On passe les fonctions de navigation au Header */}
+        <Header 
+          onLoginClick={() => setView('auth')} 
+          onHomeClick={() => setView('home')}
+          onProfileClick={() => setView('profile')}
+        />
 
-      <main>
-        {/* On affiche le composant en fonction de la valeur de 'view' */}
-        {view === 'home' && <Home />}
-        
-        {view === 'auth' && (
-          <Auth onLoginSuccess={() => setView('home')} />
-        )}
+        <main>
+          {/* Affichage conditionnel selon la vue active */}
+          {view === 'home' && <Home />}
+          
+          {view === 'auth' && (
+            <Auth onLoginSuccess={handleLoginSuccess} />
+          )}
 
-        {view === 'profile' && <Profile />}
-      </main>
-    </div>
+          {view === 'profile' && <Profile />}
+        </main>
+      </div>
+    </SearchProvider>
   );
 }
 
