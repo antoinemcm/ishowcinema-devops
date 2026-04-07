@@ -24,13 +24,13 @@ test_files:
 # -------------------------
 build_frontend:
   stage: build
-  image: node:20-alpine
+  image: node:20-slim
   tags:
     - local
   script:
     - echo "Installation et compilation de React..."
     - cd frontend
-    - npm install
+    - npm ci --no-audit --no-fund
     - npm run build
   artifacts:
     # On garde le dossier "dist" créé par Vite en mémoire
