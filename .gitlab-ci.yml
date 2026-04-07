@@ -24,7 +24,7 @@ test_files:
 # -------------------------
 build_frontend:
   stage: build
-  image: node:20-alpine
+  image: node:20-slim
   tags:
     - local
   script:
