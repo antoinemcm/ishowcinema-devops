@@ -1,2 +1,7 @@
 fastapi
 uvicorn[standard]
+requests
+pymongo
+passlib
+bcrypt
+python-dotenv
