@@ -3,31 +3,36 @@ import './styles/App.css';
 import Header from "./components/Header";
 import Home from "./pages/Home";
 import Auth from "./components/Auth";
-import Profile from "./pages/Profil"; // On n'oublie pas d'importer la nouvelle page
+import Profile from "./components/Profil"; // Vérifie bien si c'est Profil ou Profile dans ton dossier components
+import { SearchProvider } from "./context/SearchContext";
 
 function App() {
-  // 'home' par défaut. Peut devenir 'auth' ou 'profile'
   const [view, setView] = useState('home');
 
+  const handleLoginSuccess = () => {
+    setView('home');
+  };
+
   return (
-    <div className="App">
-      <Header 
-        onLoginClick={() => setView('auth')} 
-        onHomeClick={() => setView('home')}
-        onProfileClick={() => setView('profile')}
-      />
+    <SearchProvider>
+      <div className="App">
+        <Header 
+          onLoginClick={() => setView('auth')} 
+          onHomeClick={() => setView('home')}
+          onProfileClick={() => setView('profile')}
+        />
 
-      <main>
-        {/* On affiche le composant en fonction de la valeur de 'view' */}
-        {view === 'home' && <Home />}
-        
-        {view === 'auth' && (
-          <Auth onLoginSuccess={() => setView('home')} />
-        )}
+        <main>
+          {view === 'home' && <Home />}
+          
+          {view === 'auth' && (
+            <Auth onLoginSuccess={handleLoginSuccess} />
+          )}
 
-        {view === 'profile' && <Profile />}
-      </main>
-    </div>
+          {view === 'profile' && <Profile />}
+        </main>
+      </div>
+    </SearchProvider>
   );
 }
 
