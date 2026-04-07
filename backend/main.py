@@ -4,8 +4,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 from pymongo import MongoClient
+from passlib.context import CryptContext
+from pydantic import BaseModel
+from fastapi import HTTPException
 from typing import Optional
-
 
 load_dotenv()
 
@@ -20,6 +22,7 @@ users_collection = db["users"]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -70,3 +73,46 @@ def test_db():
         return {"status": "Connecté à MongoDB Local ! 🚀"}
     except Exception as e:
         return {"status": "Erreur", "details": str(e)}
+    
+    # Configuration du hachage des mots de passe
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+# Modèle pour les données reçues
+class UserAuth(BaseModel):
+    username: str
+    password: str
+
+# --- INSCRIPTION ---
+@app.post("/signup")
+def signup(user: UserAuth):
+    # 1. On vérifie juste si les champs sont remplis
+    if not user.username or not user.password:
+        raise HTTPException(status_code=400, detail="Remplis tous les champs !")
+
+    # 2. On vérifie si le pseudo existe déjà
+    if users_collection.find_one({"username": user.username}):
+        raise HTTPException(status_code=400, detail="Pseudo déjà pris !")
+
+    # 3. On enregistre le mot de passe TEL QUEL (en texte brut)
+    new_user = {
+        "username": user.username,
+        "password": user.password, # <--- Pas de hachage ici, c'est direct !
+        "favorites": []
+    }
+    
+    users_collection.insert_one(new_user)
+    return {"message": "Inscription réussie ! 🎉"}
+
+# --- CONNEXION ---
+@app.post("/login")
+def login(user: UserAuth):
+    # .strip() enlève les espaces invisibles au début et à la fin
+    username_clean = user.username.strip()
+    password_clean = user.password.strip()
+
+    db_user = users_collection.find_one({"username": username_clean})
+    
+    if db_user and db_user["password"] == password_clean:
+        return {"message": "Succès", "username": username_clean}
+    
+    raise HTTPException(status_code=400, detail="Compte inexistant ou mauvais mot de passe")
