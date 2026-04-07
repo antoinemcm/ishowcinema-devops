@@ -30,7 +30,6 @@ build_frontend:
   script:
     - echo "Installation et compilation de React..."
     - cd frontend
-    # On utilise npm ci qui consomme beaucoup moins de RAM et est fait pour les pipelines
     - npm ci --no-audit --no-fund
     - npm run build
   artifacts:
