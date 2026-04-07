@@ -6,11 +6,8 @@ FROM node:20-slim
 WORKDIR /app
 
 # 3️⃣ Copier package.json et package-lock.json
-COPY package*.json ./
+COPY package.json package-lock.json* ./
 
-ENV HTTP_PROXY="http://proxy:3128"
-ENV HTTPS_PROXY="http://proxy:3128"
-# 4️⃣ Installer les dépendances
 RUN npm install
 
 
@@ -21,4 +18,4 @@ COPY . .
 EXPOSE 5173
 
 # 7️⃣ Lancer le serveur de dev React
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]

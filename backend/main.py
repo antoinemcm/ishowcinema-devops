@@ -1,9 +1,19 @@
 import requests
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
+from pymongo import MongoClient
+
+load_dotenv()
 
 app = FastAPI()
 
+uri = os.getenv("MONGO_URI", "mongodb://localhost:27017/")
+
+client = MongoClient(uri)
+db = client["ishowcinema"]
+users_collection = db["users"]
 # Autorisation CORS pour que React puisse parler à FastAPI
 app.add_middleware(
     CORSMiddleware,
@@ -55,3 +65,12 @@ def get_movies():
 
     # 4. On envoie les données toutes propres à React !
     return movies_formatted
+
+
+@app.get("/test-db")
+def test_db():
+    try:
+        client.admin.command('ping')
+        return {"status": "Connecté à MongoDB Local ! 🚀"}
+    except Exception as e:
+        return {"status": "Erreur", "details": str(e)}
