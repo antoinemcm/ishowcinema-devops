@@ -3,7 +3,7 @@ import './styles/App.css';
 import Header from "./components/Header";
 import Home from "./pages/Home";
 import Auth from "./components/Auth";
-import Profile from "./components/Profil"; // On n'oublie pas d'importer la nouvelle page
+import Profile from "./pages/Profil"; // On n'oublie pas d'importer la nouvelle page
 
 function App() {
   // 'home' par défaut. Peut devenir 'auth' ou 'profile'
