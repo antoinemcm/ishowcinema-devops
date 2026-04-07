@@ -3,7 +3,7 @@ import './styles/App.css';
 import Header from "./components/Header";
 import Home from "./pages/Home";
 import Auth from "./components/Auth";
-import Profile from "./components/Profil"; // Vérifie bien si c'est Profil ou Profile dans ton dossier components
+import Profile from "./pages/Profil"; // Vérifie bien si c'est Profil ou Profile dans ton dossier components
 import { SearchProvider } from "./context/SearchContext";
 
 function App() {
