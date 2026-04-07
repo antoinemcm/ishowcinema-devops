@@ -30,7 +30,8 @@ build_frontend:
   script:
     - echo "Installation et compilation de React..."
     - cd frontend
-    - npm install
+    # On utilise npm ci qui consomme beaucoup moins de RAM et est fait pour les pipelines
+    - npm ci --no-audit --no-fund
     - npm run build
   artifacts:
     # On garde le dossier "dist" créé par Vite en mémoire
