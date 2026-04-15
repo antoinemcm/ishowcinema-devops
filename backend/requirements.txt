@@ -3,5 +3,5 @@ uvicorn[standard]
 requests
 pymongo
 passlib
-bcrypt
+bcrypt==3.2.2
 python-dotenv
