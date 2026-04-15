@@ -41,6 +41,10 @@ def get_movies(q: Optional[str] = None):
         url = f"https://api.themoviedb.org/3/movie/popular?api_key={TMDB_API_KEY}&language=fr-FR&page=1"
         
     response = requests.get(url)
+
+    if response.status_code != 200:
+        raise HTTPException(status_code=500, detail="Erreur API TMDB")
+
     tmdb_data = response.json()
     
     movies_formatted = []
@@ -74,7 +78,7 @@ def test_db():
     except Exception as e:
         return {"status": "Erreur", "details": str(e)}
     
-    # Configuration du hachage des mots de passe
+# Configuration du hachage des mots de passe
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # Modèle pour les données reçues
@@ -93,10 +97,12 @@ def signup(user: UserAuth):
     if users_collection.find_one({"username": user.username}):
         raise HTTPException(status_code=400, detail="Pseudo déjà pris !")
 
-    # 3. On enregistre le mot de passe TEL QUEL (en texte brut)
+    # 3. On hache le mot de passe avant de le sauvegarder
+    hashed_password = pwd_context.hash(user.password)
+
     new_user = {
         "username": user.username,
-        "password": user.password, # <--- Pas de hachage ici, c'est direct !
+        "password": hashed_password, # <--- On stocke le hash sécurisé
         "favorites": []
     }
     
@@ -110,9 +116,12 @@ def login(user: UserAuth):
     username_clean = user.username.strip()
     password_clean = user.password.strip()
 
+    # On cherche l'utilisateur en base
     db_user = users_collection.find_one({"username": username_clean})
     
-    if db_user and db_user["password"] == password_clean:
+    # On vérifie si l'utilisateur existe ET si le mot de passe correspond au hash
+    if db_user and pwd_context.verify(password_clean, db_user["password"]):
         return {"message": "Succès", "username": username_clean}
     
+    # Si l'un des deux est faux, on renvoie une erreur générique (bonne pratique de sécurité)
     raise HTTPException(status_code=400, detail="Compte inexistant ou mauvais mot de passe")
