@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSearch } from '../context/SearchContext';
 import '../styles/MovieList.css';
+import MovieCard from './MovieCard';
 
 function MovieList() {
   const [movies, setMovies] = useState([]);
@@ -15,9 +16,10 @@ function MovieList() {
     
     // On adapte l'URL selon si une recherche est en cours ou non.
     // Assurez-vous que votre FastAPI gère le paramètre ?q=... sur cette route.
+    // Dans MovieList.jsx, remplace la ligne de l'URL par :
     const url = searchQuery 
-      ? `http://127.0.0.1:8000/movies?q=${searchQuery}` 
-      : 'http://127.0.0.1:8000/movies';
+      ? `http://localhost:8000/movies?q=${searchQuery}` 
+      : 'http://localhost:8000/movies';
 
     fetch(url)
       .then(response => {
@@ -40,29 +42,16 @@ function MovieList() {
   if (error) return <div className="message error">❌ Erreur : {error}</div>;
 
   return (
-    <div className="movie-container">
-      {/* Le titre change dynamiquement si on fait une recherche */}
-      <h1>{searchQuery ? `Résultats pour "${searchQuery}"` : "🍿 IShowCinema - À l'affiche"}</h1>
-      
-      {movies.length === 0 && !loading && (
-        <p className="message" style={{ color: 'white' }}>Aucun film trouvé.</p>
-      )}
-
-      <div className="movies-grid">
-        {movies.map((movie, index) => (
-          <div key={index} className="movie-card">
-            <img src={movie.image_url} alt={`Affiche du film ${movie.title}`} />
-            
-            <div className="movie-info">
-              <h2>{movie.title} <span>({movie.year})</span></h2>
-              <p className="director">De {movie.director}</p>
-              <span className="genre-badge">{movie.genre}</span>
-            </div>
-          </div>
-        ))}
-      </div>
+  <div className="movie-container">
+    <h1>{searchQuery ? `Résultats pour "${searchQuery}"` : "🍿 IShowCinema - À l'affiche"}</h1>
+    
+    <div className="movies-grid">
+      {movies.map((movie) => (
+        <MovieCard key={movie.id || movie.title} movie={movie} />
+      ))}
     </div>
-  );
+  </div>
+);
 }
 
 export default MovieList;

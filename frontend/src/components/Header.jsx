@@ -1,26 +1,26 @@
 import { useEffect, useState } from 'react';
 import { useSearch } from '../context/SearchContext';
+import '../styles/Header.css';
 
 function Header({ onLoginClick, onHomeClick, onProfileClick }) {
   const [username, setUsername] = useState(null);
   const { searchQuery, setSearchQuery } = useSearch();
 
-  // 1. Gestion de la session utilisateur
+  // On vérifie la session au chargement
   useEffect(() => {
-    const savedUser = localStorage.getItem('username');
+    const savedUser = sessionStorage.getItem('username');
     if (savedUser) {
       setUsername(savedUser);
     }
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('username');
+    sessionStorage.removeItem('username');
     setUsername(null);
-    if (onHomeClick) onHomeClick(); // Retour à l'accueil
+    if (onHomeClick) onHomeClick(); 
     window.location.reload(); 
   };
 
-  // 2. Gestion de la recherche
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
@@ -30,14 +30,14 @@ function Header({ onLoginClick, onHomeClick, onProfileClick }) {
   };
 
   return (
-    <header className="header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 20px', backgroundColor: '#141414', color: 'white' }}>
+    <header className="header">
       
-      {/* Logo / Titre */}
-      <h1 onClick={onHomeClick} style={{ cursor: 'pointer', color: '#e50914', margin: 0 }}>
+      {/* 1. Logo / Titre (À gauche) */}
+      <h1 onClick={onHomeClick} className="header-logo">
         🍿 IShowCinema
       </h1>
 
-      {/* Barre de recherche (au centre) */}
+      {/* 2. Barre de recherche (Au centre) */}
       <form onSubmit={handleSearchSubmit} className="search-form">
         <input
           type="text"
@@ -45,36 +45,28 @@ function Header({ onLoginClick, onHomeClick, onProfileClick }) {
           placeholder="Rechercher un film..."
           value={searchQuery}
           onChange={handleSearchChange}
-          style={{ padding: '8px', borderRadius: '4px', border: 'none', width: '250px' }}
         />
       </form>
       
-      {/* Navigation utilisateur (à droite) */}
-      <nav>
+      {/* 3. Navigation utilisateur (À droite) */}
+      <nav className="header-nav">
         {username ? (
-          <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-            <span 
-              onClick={onProfileClick} 
-              style={{ cursor: 'pointer', fontWeight: 'bold', textDecoration: 'underline' }}
-            >
+          <>
+            <span onClick={onProfileClick} className="user-profile">
               👤 {username}
             </span>
-            <button 
-              onClick={handleLogout} 
-              style={{ cursor: 'pointer', backgroundColor: '#e50914', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '4px' }}
-            >
+            {/* On utilise la classe btn-red qu'on a mise dans App.css */}
+            <button onClick={handleLogout} className="btn-red">
               Déconnexion
             </button>
-          </div>
+          </>
         ) : (
-          <button 
-            onClick={onLoginClick} 
-            style={{ cursor: 'pointer', backgroundColor: '#e50914', color: 'white', border: 'none', padding: '8px 15px', borderRadius: '4px' }}
-          >
+          <button onClick={onLoginClick} className="btn-red">
             Connexion / Inscription
           </button>
         )}
       </nav>
+
     </header>
   );
 }
