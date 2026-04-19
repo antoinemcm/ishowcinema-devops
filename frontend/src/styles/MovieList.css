@@ -157,3 +157,48 @@
   cursor: default;
   border: 1px solid rgba(46, 204, 113, 0.3);
 }
+
+.pagination-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 50px 0;
+}
+
+.page-item, .page-nav {
+  background: #1a1a1a;
+  color: white;
+  border: 1px solid #333;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: 0.3s;
+  font-size: 1rem;
+}
+
+.page-item:hover, .page-nav:hover:not(:disabled) {
+  background: #e50914;
+  border-color: #e50914;
+}
+
+.page-item.active {
+  background: #e50914;
+  border-color: #e50914;
+  font-weight: bold;
+}
+
+.page-nav:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+  .pagination-bar {
+    gap: 5px;
+  }
+  .page-nav {
+    padding: 8px 10px;
+    font-size: 0.8rem;
+  }
+}

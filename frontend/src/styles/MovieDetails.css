@@ -81,3 +81,50 @@
     width: 100%;
   }
 }
+
+.details-cast {
+  font-size: 1.1rem;
+  color: #ccc;
+  margin-top: -10px;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.details-cast strong {
+  color: #fff;
+}
+
+/* Container qui prend toute la largeur */
+.details-trailer-full {
+  margin-top: 40px;
+  width: 100%;
+  max-width: 1000px; /* On centre la vidéo avec une largeur max agréable */
+  margin-left: auto;
+  margin-right: auto;
+  padding-bottom: 50px;
+}
+
+.details-trailer-full h3 {
+  color: white;
+  margin-bottom: 20px;
+  border-left: 4px solid #e50914;
+  padding-left: 15px;
+}
+
+/* Astuce pour que l'iframe soit responsive et garde le format 16/9 */
+.video-responsive {
+  overflow: hidden;
+  padding-bottom: 56.25%; /* Ratio 16:9 */
+  position: relative;
+  height: 0;
+}
+
+.video-responsive iframe {
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}

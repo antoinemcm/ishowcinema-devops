@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react'; // 👈 INDISPENSABLE
-import { useSearch } from '../context/SearchContext'; // 👈 INDISPENSABLE
+import { useEffect, useState } from 'react';
+import { useSearch } from '../context/SearchContext';
 import '../styles/Header.css'
-
 
 function Header({ onLoginClick, onHomeClick, onProfileClick, currentView }) {
   const [username, setUsername] = useState(null);
@@ -12,21 +11,23 @@ function Header({ onLoginClick, onHomeClick, onProfileClick, currentView }) {
     if (savedUser) setUsername(savedUser);
   }, []);
 
-  const isProfilePage = currentView === 'profile';
+  // Définit les pages où on cache la recherche et la navigation
+  const isSimpleMode = currentView === 'profile' || currentView === 'movie-details' || currentView === 'auth';
 
   return (
     <header className="header">
       
-      {/* 1. Logo : Se centre si on est sur le profil */}
+      {/* 1. Logo : Se centre si on est en mode simple */}
       <h1 
         onClick={onHomeClick} 
-        className={`header-logo ${isProfilePage ? 'centered-logo' : ''}`}
+        className={`header-logo ${isSimpleMode ? 'centered-logo' : ''}`}
+        style={{ cursor: 'pointer' }}
       >
         🍿 IShowCinema
       </h1>
 
-      {/* 2. Barre de recherche : Uniquement sur l'accueil */}
-      {!isProfilePage && (
+      {/* 2. Barre de recherche : On l'affiche seulement si on n'est PAS en mode simple */}
+      {!isSimpleMode && (
         <form onSubmit={(e) => e.preventDefault()} className="search-form">
           <input
             type="text"
@@ -38,12 +39,12 @@ function Header({ onLoginClick, onHomeClick, onProfileClick, currentView }) {
         </form>
       )}
       
-      {/* 3. Navigation : Masquée sur le profil */}
-      {!isProfilePage && (
+      {/* 3. Navigation : On l'affiche aussi seulement si on n'est PAS en mode simple */}
+      {!isSimpleMode && (
         <nav className="header-nav">
           {username ? (
             <>
-              <span onClick={onProfileClick} className="user-profile">
+              <span onClick={onProfileClick} className="user-profile" style={{ cursor: 'pointer' }}>
                 👤 {username}
               </span>
               <button onClick={() => {
