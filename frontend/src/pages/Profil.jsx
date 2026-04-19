@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import MovieCard from '../components/MovieCard';
 import '../styles/Profil.css'; 
 
-function Profile() {
+function Profile({onMovieSelect}) {
   const [favMovies, setFavMovies] = useState([]);
   const username = sessionStorage.getItem('username');
 
@@ -43,7 +43,8 @@ function Profile() {
                 key={movie.title} 
                 movie={movie} 
                 showRemove={true}  
-                onRemove={loadFavorites} // On passe la fonction de recharge ici
+                onRemove={loadFavorites} 
+                onDetailsClick={() => onMovieSelect(movie.id)}
               />
             ))}
           </div>
