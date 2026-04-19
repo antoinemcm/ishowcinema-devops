@@ -3,14 +3,21 @@ import './styles/App.css';
 import Header from "./components/Header";
 import Home from "./pages/Home";
 import Auth from "./components/Auth";
-import Profile from "./pages/Profil"; // Vérifie bien si c'est Profil ou Profile dans ton dossier components
+import Profile from "./pages/Profil"; 
+import MovieDetails from "./pages/MovieDetails";
 import { SearchProvider } from "./context/SearchContext";
 
 function App() {
   const [view, setView] = useState('home');
+  const [selectedMovieId, setSelectedMovieId] = useState(null);
 
   const handleLoginSuccess = () => {
     setView('home');
+  };
+
+  const handleMovieSelect = (id) => {
+    setSelectedMovieId(id);
+    setView('movie-details');
   };
 
   return (
@@ -20,16 +27,20 @@ function App() {
           onLoginClick={() => setView('auth')} 
           onHomeClick={() => setView('home')}
           onProfileClick={() => setView('profile')}
+          currentView={view} 
         />
 
-        <main>
-          {view === 'home' && <Home />}
+        <main className="page-fade-in">
+          {view === 'home' && <Home onMovieSelect={handleMovieSelect} />}
+          {view === 'auth' && <Auth onLoginSuccess={handleLoginSuccess} />}
+          {view === 'profile' && <Profile onMovieSelect={handleMovieSelect} />}
           
-          {view === 'auth' && (
-            <Auth onLoginSuccess={handleLoginSuccess} />
+          {view === 'movie-details' && (
+            <MovieDetails 
+              movieId={selectedMovieId} 
+              onBack={() => setView('home')} 
+            />
           )}
-
-          {view === 'profile' && <Profile />}
         </main>
       </div>
     </SearchProvider>

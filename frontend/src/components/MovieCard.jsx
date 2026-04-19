@@ -1,52 +1,71 @@
 import '../styles/MovieList.css';
 
-function MovieCard({ movie, showRemove = false, onRemove }) {
+function MovieCard({ movie, showRemove = false, onRemove, isFavorite, onDetailsClick }) {
   const currentUser = sessionStorage.getItem('username');
 
   const handleAddFavorite = async () => {
-    if (!currentUser) return alert("Connecte-toi !");
-    const params = new URLSearchParams({ username: currentUser, movie_title: movie.title, movie_id: movie.id });
-    const response = await fetch(`http://localhost:8000/add-favorite?${params.toString()}`, { method: 'POST' });
-    if (response.ok) {
-      alert(`❤️ "${movie.title}" a été ajouté à tes favoris !`);
+    if (!currentUser) return alert("Connecte-toi pour ajouter des favoris !");
+    try {
+      const params = new URLSearchParams({ username: currentUser, movie_title: movie.title, movie_id: movie.id });
+      const response = await fetch(`http://localhost:8000/add-favorite?${params.toString()}`, { method: 'POST' });
+      if (response.ok) alert(`❤️ "${movie.title}" a été ajouté !`);
+    } catch (error) {
+      console.error("Erreur ajout favori:", error);
     }
   };
 
   const handleRemoveFavorite = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!window.confirm(`Retirer "${movie.title}" ?`)) return;
+    if (!window.confirm(`Retirer "${movie.title}" de tes favoris ?`)) return;
 
     try {
       const params = new URLSearchParams({ username: currentUser, movie_title: movie.title, movie_id: movie.id });
       const response = await fetch(`http://localhost:8000/remove-favorite?${params.toString()}`, { method: 'POST' });
-
-      if (response.ok) {
-        // AU LIEU DE RELOAD : on appelle la fonction de mise à jour du parent
-        if (onRemove) {
-            onRemove(); 
-        }
-      }
+      if (response.ok) { if (onRemove) onRemove(); }
     } catch (error) {
-      alert("Erreur serveur");
+      alert("Erreur lors de la suppression");
     }
   };
 
   return (
     <div className="movie-card">
       <img src={movie.image_url} alt={movie.title} />
+
       <div className="movie-info">
-        <h2>{movie.title} <span>({movie.year})</span></h2>
-        <p className="director">De {movie.director}</p>
-        <div className="card-footer">
-          <span className="genre-badge">{movie.genre}</span>
-          <div className="card-actions">
-            {!showRemove ? (
-              <button className="btn-fav" onClick={handleAddFavorite}>❤️</button>
-            ) : (
-              <button className="btn-remove" onClick={handleRemoveFavorite}>✖</button>
-            )}
+        <div className="info-top">
+          <h2>{movie.title} <span>({movie.year})</span></h2>
+          <p className="director">De {movie.director}</p>
+          
+          {/* Les badges sont maintenant séparés des boutons */}
+          <div className="badges-container">
+            <span className="genre-badge">
+              {showRemove ? movie.genre : "Populaire"}
+            </span>
           </div>
+        </div>
+
+        {/* La nouvelle Grille de Boutons */}
+        <div className="card-footer-grid">
+          <button className="btn-grid btn-grid-details" onClick={onDetailsClick}>
+            ℹ️ Détails
+          </button>
+
+          {showRemove ? (
+            <button className="btn-grid btn-grid-remove" onClick={handleRemoveFavorite}>
+              ✖ Retirer
+            </button>
+          ) : (
+            isFavorite ? (
+              <button className="btn-grid btn-grid-added" disabled>
+                ✅ Ajouté
+              </button>
+            ) : (
+              <button className="btn-grid btn-grid-fav" onClick={handleAddFavorite}>
+                ❤️ Favoris
+              </button>
+            )
+          )}
         </div>
       </div>
     </div>
