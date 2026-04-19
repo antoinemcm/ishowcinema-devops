@@ -1,6 +1,6 @@
 import '../styles/MovieList.css';
 
-function MovieCard({ movie, showRemove = false, onRemove, isFavorite, onDetailsClick }) {
+function MovieCard({ movie, showRemove = false, onRemove, isFavorite, onDetailsClick, onAdd }) {
   const currentUser = sessionStorage.getItem('username');
 
   const handleAddFavorite = async () => {
@@ -8,7 +8,10 @@ function MovieCard({ movie, showRemove = false, onRemove, isFavorite, onDetailsC
     try {
       const params = new URLSearchParams({ username: currentUser, movie_title: movie.title, movie_id: movie.id });
       const response = await fetch(`http://localhost:8000/add-favorite?${params.toString()}`, { method: 'POST' });
-      if (response.ok) alert(`❤️ "${movie.title}" a été ajouté !`);
+      if (response.ok){
+        if (onAdd) onAdd();
+        alert(`❤️ "${movie.title}" a été ajouté !`);
+      } 
     } catch (error) {
       console.error("Erreur ajout favori:", error);
     }
@@ -38,9 +41,10 @@ function MovieCard({ movie, showRemove = false, onRemove, isFavorite, onDetailsC
           <p className="director">De {movie.director}</p>
           
           {/* Les badges sont maintenant séparés des boutons */}
+         {/* Les badges sont maintenant séparés des boutons */}
           <div className="badges-container">
             <span className="genre-badge">
-              {showRemove ? movie.genre : "Populaire"}
+              {movie.genre}
             </span>
           </div>
         </div>

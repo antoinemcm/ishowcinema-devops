@@ -28,7 +28,10 @@ function Home({ onMovieSelect }) {
         .catch(err => console.error("Erreur favs:", err));
     }
   }, [username]);
-
+  const handleMovieAdded = (movieId) => {
+    // On ajoute le nouvel ID à la liste locale sans avoir à recharger la page
+    setFavoriteIds(prevIds => [...prevIds, String(movieId)]);
+  };
   return (
     <div className="movie-container">
       <h2 style={{ textAlign: 'center', color: 'white', margin: '20px 0' }}>
@@ -42,6 +45,7 @@ function Home({ onMovieSelect }) {
               movie={movie} 
               isFavorite={favoriteIds.includes(String(movie.id))} 
               onDetailsClick={() => onMovieSelect(movie.id)}
+              onAdd={() => handleMovieAdded(movie.id)}
             />
           ))
         ) : (
