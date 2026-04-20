@@ -1,19 +1,23 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; 
+import { useAuth } from '../context/AuthContext';
 import '../styles/Auth.css';
 
-function Auth({ onLoginSuccess }) {
+function Auth() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState(''); // Nouvel état
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [isLogin, setIsLogin] = useState(true);
+  
+  const navigate = useNavigate(); // Hook de navigation
+  const { login } = useAuth(); // On récupère la fonction login
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // --- VÉRIFICATION DU MOT DE PASSE ---
     if (!isLogin && password !== confirmPassword) {
       alert("❌ Les mots de passe ne correspondent pas !");
-      return; // On arrête tout ici
+      return;
     }
 
     const endpoint = isLogin ? '/login' : '/signup';
@@ -29,14 +33,13 @@ function Auth({ onLoginSuccess }) {
 
       if (response.ok) {
         if (isLogin) {
-          sessionStorage.setItem('username', data.username);
-          if (onLoginSuccess) onLoginSuccess();
-          window.location.reload(); 
+          login(data.username);
+          navigate('/'); 
         } else {
           alert("🎉 Compte créé ! Tu peux maintenant te connecter.");
           setIsLogin(true); 
           setPassword('');
-          setConfirmPassword(''); // On vide aussi la confirmation
+          setConfirmPassword('');
         }
       } else {
         alert(data.detail || "Erreur lors de la requête");

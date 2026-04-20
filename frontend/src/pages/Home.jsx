@@ -87,7 +87,6 @@ function Home({ onMovieSelect }) {
                 key={movie.id} 
                 movie={movie} 
                 isFavorite={favoriteIds.includes(String(movie.id))} 
-                onDetailsClick={() => onMovieSelect(movie.id)}
                 onAdd={() => handleMovieAdded(movie.id)}
               />
             ))

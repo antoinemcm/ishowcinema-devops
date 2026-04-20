@@ -1,32 +1,34 @@
 import { useEffect, useState } from 'react';
 import { useSearch } from '../context/SearchContext';
+import { useAuth } from '../context/AuthContext';
+import { Link, useNavigate, useLocation } from 'react-router-dom'; 
 import '../styles/Header.css'
 
-function Header({ onLoginClick, onHomeClick, onProfileClick, currentView }) {
-  const [username, setUsername] = useState(null);
+function Header() {
   const { searchQuery, setSearchQuery } = useSearch();
+  const { username, logout } = useAuth(); // On récupère username et logout
 
-  useEffect(() => {
-    const savedUser = sessionStorage.getItem('username');
-    if (savedUser) setUsername(savedUser);
-  }, []);
+  // Hooks de navigation
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  // Définit les pages où on cache la recherche et la navigation
-  const isSimpleMode = currentView === 'profile' || currentView === 'movie-details' || currentView === 'auth';
+  const handleLogout = () => {
+    logout(); // On utilise la fonction du Context
+    navigate('/'); 
+  };
+
+  // On vérifie le chemin actuel pour le mode simple
+  const isSimpleMode = location.pathname.includes('/profile') || 
+                       location.pathname.includes('/movie') || 
+                       location.pathname.includes('/auth');
 
   return (
     <header className="header">
-      
-      {/* 1. Logo : Se centre si on est en mode simple */}
-      <h1 
-        onClick={onHomeClick} 
-        className={`header-logo ${isSimpleMode ? 'centered-logo' : ''}`}
-        style={{ cursor: 'pointer' }}
-      >
-        🍿 IShowCinema
-      </h1>
+      {/* 1. Logo avec composant Link */}
+      <Link to="/" className={`header-logo ${isSimpleMode ? 'centered-logo' : ''}`} style={{ textDecoration: 'none' }}>
+        <h1>🍿 IShowCinema</h1>
+      </Link>
 
-      {/* 2. Barre de recherche : On l'affiche seulement si on n'est PAS en mode simple */}
       {!isSimpleMode && (
         <form onSubmit={(e) => e.preventDefault()} className="search-form">
           <input
@@ -39,29 +41,25 @@ function Header({ onLoginClick, onHomeClick, onProfileClick, currentView }) {
         </form>
       )}
       
-      {/* 3. Navigation : On l'affiche aussi seulement si on n'est PAS en mode simple */}
       {!isSimpleMode && (
         <nav className="header-nav">
           {username ? (
             <>
-              <span onClick={onProfileClick} className="user-profile" style={{ cursor: 'pointer' }}>
+              {/* Remplacé le span par un Link vers le profil */}
+              <Link to="/profile" className="user-profile" style={{ textDecoration: 'none' }}>
                 👤 {username}
-              </span>
-              <button onClick={() => {
-                sessionStorage.removeItem('username');
-                window.location.reload();
-              }} className="btn-red">
+              </Link>
+              <button onClick={handleLogout} className="btn-red">
                 Déconnexion
               </button>
             </>
           ) : (
-            <button onClick={onLoginClick} className="btn-red">
-              Connexion / Inscription
+            <button onClick={() => navigate('/auth')} className="btn-red">
+              Connexion
             </button>
           )}
         </nav>
       )}
-
     </header>
   );
 }
