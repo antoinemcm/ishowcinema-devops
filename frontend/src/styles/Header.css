@@ -8,22 +8,40 @@
   background-color: #000;
 }
 
-/* Logo par défaut (Accueil) */
+/* --- 1. Logo par défaut (Accueil) --- */
+
 .header-logo {
-  color: #e50914;
-  cursor: pointer;
-  font-size: 1.5rem;
+  justify-self: start;
   z-index: 10;
+  text-decoration: none !important; /* Force la suppression du soulignement */
 }
 
-/* Logo centré (Profil) */
+.header-logo h1 {
+  color: #e50914; 
+  font-size: 2rem; 
+  margin: 0;
+  transition: color 0.2s ease;
+}
+
+/* Effet au survol (écrase le bleu clair de Vite) */
+/* .header-logo:hover h1 {
+  color: #ffffff; Devient blanc au survol pour un effet plus propre : commenté pcq pas sûr
+} */
+
+
+/* --- 2. Logo centré (Profil) --- */
+
 .header-logo.centered-logo {
   position: absolute;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%); /* Centrage horizontal et vertical parfait */
-  font-size: 2rem;
+  transform: translate(-50%, -50%);
   margin: 0;
+}
+
+/* Taille un peu plus grande quand il est au centre */
+.header-logo.centered-logo h1 {
+  font-size: 2.5rem; 
 }
 
 /* Navigation à droite */
@@ -34,8 +52,6 @@
   margin-left: auto; /* Pousse tout à droite sur l'accueil */
 }
 
-/* Barre de recherche au centre (Accueil) */
-/* ... reste du code ... */
 
 /* 2. La Barre de recherche (au centre) */
 .search-form {

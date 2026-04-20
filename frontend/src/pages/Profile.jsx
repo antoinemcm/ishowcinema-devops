@@ -44,7 +44,6 @@ function Profile({onMovieSelect}) {
                 movie={movie} 
                 showRemove={true}  
                 onRemove={loadFavorites} 
-                onDetailsClick={() => onMovieSelect(movie.id)}
               />
             ))}
           </div>

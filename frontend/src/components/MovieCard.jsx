@@ -1,7 +1,9 @@
 import '../styles/MovieList.css';
+import { useNavigate } from 'react-router-dom';
 
-function MovieCard({ movie, showRemove = false, onRemove, isFavorite, onDetailsClick, onAdd }) {
+function MovieCard({ movie, showRemove = false, onRemove, isFavorite, onAdd }) {
   const currentUser = sessionStorage.getItem('username');
+  const navigate = useNavigate(); // Hook de navigation
 
   const handleAddFavorite = async () => {
     if (!currentUser) return alert("Connecte-toi pour ajouter des favoris !");
@@ -34,24 +36,18 @@ function MovieCard({ movie, showRemove = false, onRemove, isFavorite, onDetailsC
   return (
     <div className="movie-card">
       <img src={movie.image_url} alt={movie.title} />
-
       <div className="movie-info">
         <div className="info-top">
           <h2>{movie.title} <span>({movie.year})</span></h2>
           <p className="director">De {movie.director}</p>
-          
-          {/* Les badges sont maintenant séparés des boutons */}
-         {/* Les badges sont maintenant séparés des boutons */}
           <div className="badges-container">
-            <span className="genre-badge">
-              {movie.genre}
-            </span>
+            <span className="genre-badge">{movie.genre}</span>
           </div>
         </div>
 
-        {/* La nouvelle Grille de Boutons */}
         <div className="card-footer-grid">
-          <button className="btn-grid btn-grid-details" onClick={onDetailsClick}>
+          {/* Nouveau comportement du bouton Détails */}
+          <button className="btn-grid btn-grid-details" onClick={() => navigate(`/movie/${movie.id}`)}>
             ℹ️ Détails
           </button>
 

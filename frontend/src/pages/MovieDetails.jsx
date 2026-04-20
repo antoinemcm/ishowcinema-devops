@@ -1,13 +1,21 @@
 import { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom'; 
 import '../styles/MovieDetails.css';
 
-function MovieDetails({ movieId, onBack }) {
+function MovieDetails() {
+  const { id } = useParams(); // On extrait l'ID directement depuis l'URL (/movie/:id)
+  const navigate = useNavigate(); // On prépare la navigation pour le bouton retour
+
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`http://localhost:8000/movies/${movieId}`)
-      .then(res => res.json())
+    // On utilise 'id' au lieu de 'movieId'
+    fetch(`http://localhost:8000/movies/${id}`)
+      .then(res => {
+        if (!res.ok) throw new Error("Film introuvable");
+        return res.json();
+      })
       .then(data => {
         setMovie(data);
         setLoading(false);
@@ -16,16 +24,17 @@ function MovieDetails({ movieId, onBack }) {
         console.error("Erreur:", err);
         setLoading(false);
       });
-  }, [movieId]);
+  }, [id]);
 
   if (loading) return <div style={{ color: 'white', textAlign: 'center', marginTop: '50px' }}>⏳ Chargement des détails...</div>;
   if (!movie) return <div style={{ color: 'white', textAlign: 'center', marginTop: '50px' }}>❌ Film introuvable.</div>;
 
   return (
     <div className="movie-details-page page-fade-in">
-      <button className="btn-back" onClick={onBack}>← Retour</button>
+      {/* 6. navigate(-1) demande au navigateur de revenir à la page précédente */}
+      <button className="btn-back" onClick={() => navigate(-1)}>← Retour</button>
 
-      {/* Le contenu principal (Affiche + Infos) */}
+      {/* Le contenu principal (Affiche + Infos) reste exactement le même */}
       <div className="details-content">
         <div className="details-poster">
           <img src={movie.image_url} alt={movie.title} />
