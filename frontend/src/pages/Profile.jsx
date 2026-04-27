@@ -6,7 +6,6 @@ function Profile({onMovieSelect}) {
   const [favMovies, setFavMovies] = useState([]);
   const username = sessionStorage.getItem('username');
 
-  // Fonction pour charger (ou rafraîchir) les favoris
   const loadFavorites = () => {
     if (username) {
       fetch(`http://localhost:8000/favorites-details/${username}`)

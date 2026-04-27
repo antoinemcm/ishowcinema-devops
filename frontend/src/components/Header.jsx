@@ -6,25 +6,24 @@ import '../styles/Header.css'
 
 function Header() {
   const { searchQuery, setSearchQuery } = useSearch();
-  const { username, logout } = useAuth(); // On récupère username et logout
+  const { username, logout } = useAuth();
 
-  // Hooks de navigation
+
   const navigate = useNavigate();
   const location = useLocation();
 
   const handleLogout = () => {
-    logout(); // On utilise la fonction du Context
+    logout(); 
     navigate('/'); 
   };
 
-  // On vérifie le chemin actuel pour le mode simple
+
   const isSimpleMode = location.pathname.includes('/profile') || 
                        location.pathname.includes('/movie') || 
                        location.pathname.includes('/auth');
 
   return (
     <header className="header">
-      {/* 1. Logo avec composant Link */}
       <Link to="/" className={`header-logo ${isSimpleMode ? 'centered-logo' : ''}`} style={{ textDecoration: 'none' }}>
         <h1>🍿 IShowCinema</h1>
       </Link>
@@ -45,7 +44,6 @@ function Header() {
         <nav className="header-nav">
           {username ? (
             <>
-              {/* Remplacé le span par un Link vers le profil */}
               <Link to="/profile" className="user-profile" style={{ textDecoration: 'none' }}>
                 👤 {username}
               </Link>

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 function MovieCard({ movie, showRemove = false, onRemove, isFavorite, onAdd }) {
   const currentUser = sessionStorage.getItem('username');
-  const navigate = useNavigate(); // Hook de navigation
+  const navigate = useNavigate(); 
 
   const handleAddFavorite = async () => {
     if (!currentUser) return alert("Connecte-toi pour ajouter des favoris !");
@@ -46,7 +46,6 @@ function MovieCard({ movie, showRemove = false, onRemove, isFavorite, onAdd }) {
         </div>
 
         <div className="card-footer-grid">
-          {/* Nouveau comportement du bouton Détails */}
           <button className="btn-grid btn-grid-details" onClick={() => navigate(`/movie/${movie.id}`)}>
             ℹ️ Détails
           </button>

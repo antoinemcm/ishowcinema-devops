@@ -15,7 +15,7 @@ load_dotenv()
 
 app = FastAPI()
 
-# --- API ---
+# API 
 TMDB_API_KEY = "c7d18e19b24cb397f78119b0008406ba"
 
 # BDD
@@ -171,7 +171,7 @@ def get_movies(q: Optional[str] = None, page: int = 1):
     with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
         movies_formatted = list(executor.map(fetch_movie_data, results))
 
-    # 4. Sauvegarde dans le cache
+    # Sauvegarde dans le cache
     try:
         cache.setex(cache_key, 600, json.dumps(movies_formatted))
         print(f"Depuis TMDB et sauvegardées en cache ! (clé: {cache_key})")

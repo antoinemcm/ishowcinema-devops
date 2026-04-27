@@ -7,16 +7,11 @@ function MovieList() {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
-  // On récupère le texte tapé dans le Header
   const { searchQuery } = useSearch();
 
   useEffect(() => {
     setLoading(true);
-    
-    // On adapte l'URL selon si une recherche est en cours ou non.
-    // Assurez-vous que votre FastAPI gère le paramètre ?q=... sur cette route.
-    // Dans MovieList.jsx, remplace la ligne de l'URL par :
+
     const url = searchQuery 
       ? `http://localhost:8000/movies?q=${searchQuery}` 
       : 'http://localhost:8000/movies';
@@ -36,7 +31,7 @@ function MovieList() {
         setError(err.message);
         setLoading(false);
       });
-  }, [searchQuery]); // Le useEffect se redéclenche dès que searchQuery change
+  }, [searchQuery]); 
 
   if (loading) return <div className="message">⏳ Chargement des films...</div>;
   if (error) return <div className="message error">❌ Erreur : {error}</div>;
