@@ -7,13 +7,11 @@ function MovieDetails() {
   const navigate = useNavigate(); 
 
   const [movie, setMovie] = useState(null);
-  const [recommendations, setRecommendations] = useState([]); // État pour les recos
+  const [recommendations, setRecommendations] = useState([]); 
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setLoading(true);
-    
-    // 1. Fetch des détails du film
     fetch(`http://localhost:8000/movies/${id}`)
       .then(res => {
         if (!res.ok) throw new Error("Film introuvable");
@@ -28,13 +26,10 @@ function MovieDetails() {
         setLoading(false);
       });
 
-    // 2. Fetch des recommandations (on utilise la nouvelle route du backend)
     fetch(`http://localhost:8000/movies/${id}/recommendations`)
       .then(res => res.json())
       .then(data => setRecommendations(data))
       .catch(err => console.error("Erreur recommandations:", err));
-
-    // Remonter en haut de page quand on change de film
     window.scrollTo(0, 0);
   }, [id]);
 

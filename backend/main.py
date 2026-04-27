@@ -19,16 +19,19 @@ app = FastAPI()
 TMDB_API_KEY = "c7d18e19b24cb397f78119b0008406ba"
 
 # BDD
-uri = os.getenv("MONGO_URI", "mongodb://localhost:27017/")
-client = MongoClient(uri)
+MONGO_URI = os.getenv("MONGO_URI", "mongodb://mongodb-service:27017/")
+client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
 db = client["ishowcinema"]
 users_collection = db["users"]
+
+# cache
+REDIS_HOST = os.getenv("REDIS_HOST", "redis") 
+cache = redis.Redis(host=REDIS_HOST, port=6379, db=0, decode_responses=True)
 
 # Sécurité
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-#cache
-cache = redis.Redis(host='redis', port=6379, db=0, decode_responses=True) 
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -42,7 +45,7 @@ class UserAuth(BaseModel):
     username: str
     password: str
 
-# --- 1. GESTION DES FAVORIS ---
+# --- GESTION DES FAVORIS ---
 
 @app.post("/add-favorite")
 def add_favorite(username: str, movie_id: str):
@@ -95,7 +98,7 @@ def get_favorites_details(username: str):
             
     return [movie for movie in results if movie is not None]
 
-# --- 2. AUTHENTIFICATION ---
+# --- AUTHENTIFICATION ---
 
 @app.post("/signup")
 def signup(user: UserAuth):
@@ -118,14 +121,13 @@ def login(user: UserAuth):
         return {"message": "Succès", "username": user.username.strip()}
     raise HTTPException(status_code=400, detail="Identifiants incorrects")
 
-# --- 3. LOGIQUE FILMS ---
+# --- FILMS ---
 
 @app.get("/movies")
 def get_movies(q: Optional[str] = None, page: int = 1):
-    # 1. Création de la clé unique pour Redis (ex: "search_avatar_1" ou "popular_2")
     cache_key = f"search_{q}_{page}" if q else f"popular_{page}"
     
-    # 2. Vérification : Est-ce que les données sont déjà dans le cache ?
+    # données sont déjà dans le cache ?
     try:
         cached_data = cache.get(cache_key)
         if cached_data:
@@ -134,7 +136,7 @@ def get_movies(q: Optional[str] = None, page: int = 1):
     except Exception as e:
         print(f"Erreur de lecture Redis (ignorée): {e}")
 
-    # 3. Si non trouvé en cache -> On fait le travail normal via TMDB
+    # Si non via tmdb
     if q:
         url = f"https://api.themoviedb.org/3/search/movie?api_key={TMDB_API_KEY}&language=fr-FR&query={q}&page={page}"
     else:
@@ -146,7 +148,6 @@ def get_movies(q: Optional[str] = None, page: int = 1):
     
     def fetch_movie_data(item):
         movie_id = item.get("id")
-        # On récupère le réalisateur via les crédits
         cred_url = f"https://api.themoviedb.org/3/movie/{movie_id}/credits?api_key={TMDB_API_KEY}"
         director = "Inconnu"
         try:
@@ -166,11 +167,11 @@ def get_movies(q: Optional[str] = None, page: int = 1):
             "image_url": f"https://image.tmdb.org/t/p/w500{item.get('poster_path')}" if item.get('poster_path') else "https://placehold.co/400x600"
         }
 
-    # Parallélisation pour charger les 20 films d'une page instantanément
+    # Parallélisation
     with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
         movies_formatted = list(executor.map(fetch_movie_data, results))
 
-    # 4. Sauvegarde dans le cache pour les prochains utilisateurs (600 secondes = 10 minutes)
+    # 4. Sauvegarde dans le cache
     try:
         cache.setex(cache_key, 600, json.dumps(movies_formatted))
         print(f"Depuis TMDB et sauvegardées en cache ! (clé: {cache_key})")
@@ -181,7 +182,7 @@ def get_movies(q: Optional[str] = None, page: int = 1):
 
 @app.get("/movies/{movie_id}")
 def get_movie_details(movie_id: str):
-    # Récupération Détails + Casting + Vidéos en une fois
+    # Récupération des infos
     url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key={TMDB_API_KEY}&language=fr-FR&append_to_response=credits,videos"
     
     try:
@@ -198,10 +199,10 @@ def get_movie_details(movie_id: str):
                 director = member.get("name")
                 break
         
-        # Acteurs (Top 5)
+        # Acteurs 
         actors = [m.get("name") for m in item.get("credits", {}).get("cast", [])[:5]]
         
-        # Bande-annonce YouTube
+        # Bande-annonce
         trailer_key = None
         for v in item.get("videos", {}).get("results", []):
             if v.get("type") == "Trailer" and v.get("site") == "YouTube":
