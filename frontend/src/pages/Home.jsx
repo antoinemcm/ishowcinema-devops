@@ -10,21 +10,17 @@ function Home({ onMovieSelect }) {
   const { searchQuery } = useSearch();
   const username = sessionStorage.getItem('username');
 
-  // 1. Reset à la page 1 lors d'une nouvelle recherche
+
   useEffect(() => {
     setPage(1);
   }, [searchQuery]);
 
-  // 2. Chargement des films avec Debounce et AbortController (Sécurité maximale)
+
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
-
-    // On attend 500ms avant de lancer la requête
     const timer = setTimeout(() => {
-      setMovies([]); // On vide la liste pour l'état de chargement
-
-      // REMPLACE localhost PAR L'IP DE TA VM SI TU ES SUR UNE VM
+      setMovies([]); 
       const baseUrl = "http://localhost:8000";
       const url = searchQuery 
         ? `${baseUrl}/movies?q=${searchQuery}&page=${page}` 
@@ -49,7 +45,6 @@ function Home({ onMovieSelect }) {
     };
   }, [searchQuery, page]);
 
-  // 3. Chargement des favoris pour l'état des boutons ❤️
   useEffect(() => {
     if (username) {
       fetch(`http://localhost:8000/favorites-details/${username}`)
@@ -63,7 +58,7 @@ function Home({ onMovieSelect }) {
     setFavoriteIds(prevIds => [...prevIds, String(movieId)]);
   };
 
-  // 4. Construction de la barre de numéros de page
+
   const renderPagination = () => {
     const pages = [];
     const startPage = Math.max(1, page - 2);
@@ -92,7 +87,6 @@ function Home({ onMovieSelect }) {
       <div className="movies-grid">
         {movies.length > 0 ? (
           movies
-            // SÉCURITÉ ANTI-DOUBLONS
             .filter((movie, index, self) => 
                 index === self.findIndex((m) => m.id === movie.id)
             )
@@ -111,7 +105,6 @@ function Home({ onMovieSelect }) {
         )}
       </div>
 
-      {/* Barre de Pagination */}
       {movies.length > 0 && (
         <div className="pagination-bar">
           <button 

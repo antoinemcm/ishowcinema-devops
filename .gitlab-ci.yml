@@ -3,9 +3,9 @@ stages:
   - build
   - deploy
 
-# -------------------------
-# 1. Vérification des fichiers (Ton code était top !)
-# -------------------------
+
+# 1. Vérification des fichiers
+
 test_files:
   stage: test
   image: alpine:latest
@@ -19,9 +19,9 @@ test_files:
     - if [ ! -f frontend/package.json ]; then echo "Erreur - package.json est manquant !"; exit 1; fi
     - echo "Tous les fichiers sont présents. L'architecture est valide !"
 
-# -------------------------
-# 2. Construction de ton site React (NOUVEAU)
-# -------------------------
+
+# 2. Construction du site React 
+
 build_frontend:
   stage: build
   image: node:20-slim
@@ -33,13 +33,12 @@ build_frontend:
     - npm ci --no-audit --no-fund
     - npm run build
   artifacts:
-    # On garde le dossier "dist" créé par Vite en mémoire
     paths:
       - frontend/dist/
 
-# -------------------------
+
 # 3. Déploiement sur GitLab Pages
-# -------------------------
+
 pages:
   stage: deploy
   image: alpine:latest
@@ -47,7 +46,6 @@ pages:
     - local
   script:
     - echo "Déploiement du site..."
-    # On renomme le dossier compilé "dist" en "public" (obligatoire pour GitLab)
     - mv frontend/dist public
   artifacts:
     paths:
