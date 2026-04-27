@@ -1,7 +1,6 @@
 # Contenu du README.md optimisé pour le rendu de projet
-readme_final = """# 🎬 IShowCinema - Plateforme de Films (TME Ops)
 
-Ce projet est une application web complète (Fullstack) permettant de consulter des films, de s'inscrire et de gérer ses favoris. Il démontre la mise en œuvre d'une architecture micro-services conteneurisée et orchestrée.
+Ce projet est une application web permettant de consulter des films, de s'inscrire et de gérer ses favoris. 
 
 ## 🏗 Architecture du Projet
 
