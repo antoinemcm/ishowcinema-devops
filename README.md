@@ -1,4 +1,4 @@
-# Contenu du README.md optimisé pour le rendu de projet
+# README
 
 Ce projet est une application web permettant de consulter des films, de s'inscrire et de gérer ses favoris. 
 
