@@ -3,14 +3,17 @@ import { useParams, useNavigate } from 'react-router-dom';
 import '../styles/MovieDetails.css';
 
 function MovieDetails() {
-  const { id } = useParams(); // On extrait l'ID directement depuis l'URL (/movie/:id)
-  const navigate = useNavigate(); // On prépare la navigation pour le bouton retour
+  const { id } = useParams(); 
+  const navigate = useNavigate(); 
 
   const [movie, setMovie] = useState(null);
+  const [recommendations, setRecommendations] = useState([]); // État pour les recos
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // On utilise 'id' au lieu de 'movieId'
+    setLoading(true);
+    
+    // 1. Fetch des détails du film
     fetch(`http://localhost:8000/movies/${id}`)
       .then(res => {
         if (!res.ok) throw new Error("Film introuvable");
@@ -24,6 +27,15 @@ function MovieDetails() {
         console.error("Erreur:", err);
         setLoading(false);
       });
+
+    // 2. Fetch des recommandations (on utilise la nouvelle route du backend)
+    fetch(`http://localhost:8000/movies/${id}/recommendations`)
+      .then(res => res.json())
+      .then(data => setRecommendations(data))
+      .catch(err => console.error("Erreur recommandations:", err));
+
+    // Remonter en haut de page quand on change de film
+    window.scrollTo(0, 0);
   }, [id]);
 
   if (loading) return <div style={{ color: 'white', textAlign: 'center', marginTop: '50px' }}>⏳ Chargement des détails...</div>;
@@ -31,10 +43,8 @@ function MovieDetails() {
 
   return (
     <div className="movie-details-page page-fade-in">
-      {/* 6. navigate(-1) demande au navigateur de revenir à la page précédente */}
       <button className="btn-back" onClick={() => navigate(-1)}>← Retour</button>
 
-      {/* Le contenu principal (Affiche + Infos) reste exactement le même */}
       <div className="details-content">
         <div className="details-poster">
           <img src={movie.image_url} alt={movie.title} />
@@ -56,13 +66,12 @@ function MovieDetails() {
 
           <div className="details-synopsis">
             <h3>Synopsis</h3>
-            <p>
-              {movie.synopsis || "Le synopsis de ce film n'est pas encore disponible. Reviens plus tard !"}
-             </p> 
+            <p>{movie.synopsis || "Le synopsis de ce film n'est pas encore disponible."}</p> 
           </div>
         </div>
       </div>
 
+      {/* SECTION BANDE-ANNONCE */}
       {movie.trailer_url && (
         <div className="details-trailer-full">
           <h3>Bande-annonce</h3>
@@ -73,6 +82,28 @@ function MovieDetails() {
               frameBorder="0"
               allowFullScreen
             ></iframe>
+          </div>
+        </div>
+      )}
+
+      {/* SECTION RECOMMANDATIONS (Nouveau) */}
+      {recommendations.length > 0 && (
+        <div className="reco-section">
+          <h3>Vous aimerez aussi...</h3>
+          <div className="reco-grid">
+            {recommendations.map((rec) => (
+              <div 
+                key={rec.id} 
+                className="reco-card" 
+                onClick={() => navigate(`/movie/${rec.id}`)}
+              >
+                <img src={rec.image_url} alt={rec.title} />
+                <div className="reco-info">
+                  <h4>{rec.title}</h4>
+                  <span>{rec.year}</span>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}

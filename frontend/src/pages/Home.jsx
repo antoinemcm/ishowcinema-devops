@@ -15,23 +15,38 @@ function Home({ onMovieSelect }) {
     setPage(1);
   }, [searchQuery]);
 
-  // 2. Chargement des films avec nettoyage (évite les mélanges de pages)
+  // 2. Chargement des films avec Debounce et AbortController (Sécurité maximale)
   useEffect(() => {
-    // On vide la liste actuelle pour montrer que ça charge et éviter les doublons visuels
-    setMovies([]); 
+    const controller = new AbortController();
+    const signal = controller.signal;
 
-    const url = searchQuery 
-      ? `http://localhost:8000/movies?q=${searchQuery}&page=${page}` 
-      : `http://localhost:8000/movies?page=${page}`;
-    
-    fetch(url)
-      .then(res => res.json())
-      .then(data => {
-        setMovies(data);
-        // Retour en haut de page fluide pour la nouvelle liste
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      })
-      .catch(err => console.error("Erreur films:", err));
+    // On attend 500ms avant de lancer la requête
+    const timer = setTimeout(() => {
+      setMovies([]); // On vide la liste pour l'état de chargement
+
+      // REMPLACE localhost PAR L'IP DE TA VM SI TU ES SUR UNE VM
+      const baseUrl = "http://localhost:8000";
+      const url = searchQuery 
+        ? `${baseUrl}/movies?q=${searchQuery}&page=${page}` 
+        : `${baseUrl}/movies?page=${page}`;
+      
+      fetch(url, { signal })
+        .then(res => res.json())
+        .then(data => {
+          setMovies(data);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        })
+        .catch(err => {
+          if (err.name !== 'AbortError') {
+            console.error("Erreur films:", err);
+          }
+        });
+    }, 500);
+
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
   }, [searchQuery, page]);
 
   // 3. Chargement des favoris pour l'état des boutons ❤️
@@ -51,7 +66,6 @@ function Home({ onMovieSelect }) {
   // 4. Construction de la barre de numéros de page
   const renderPagination = () => {
     const pages = [];
-    // Affiche 2 pages avant et 2 pages après la page actuelle
     const startPage = Math.max(1, page - 2);
     const endPage = page + 2;
 
@@ -78,7 +92,7 @@ function Home({ onMovieSelect }) {
       <div className="movies-grid">
         {movies.length > 0 ? (
           movies
-            // SÉCURITÉ ANTI-DOUBLONS : on ne garde que la première occurrence de chaque ID
+            // SÉCURITÉ ANTI-DOUBLONS
             .filter((movie, index, self) => 
                 index === self.findIndex((m) => m.id === movie.id)
             )

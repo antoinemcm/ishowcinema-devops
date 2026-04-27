@@ -8,15 +8,17 @@ from dotenv import load_dotenv
 from pymongo import MongoClient
 from passlib.context import CryptContext
 from pydantic import BaseModel
+import redis
+import json
 
 load_dotenv()
 
 app = FastAPI()
 
-# --- CONFIGURATION ---
+# --- API ---
 TMDB_API_KEY = "c7d18e19b24cb397f78119b0008406ba"
 
-# MongoDB
+# BDD
 uri = os.getenv("MONGO_URI", "mongodb://localhost:27017/")
 client = MongoClient(uri)
 db = client["ishowcinema"]
@@ -24,6 +26,9 @@ users_collection = db["users"]
 
 # Sécurité
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+#cache
+cache = redis.Redis(host='redis', port=6379, db=0, decode_responses=True) 
 
 app.add_middleware(
     CORSMiddleware,
@@ -117,7 +122,19 @@ def login(user: UserAuth):
 
 @app.get("/movies")
 def get_movies(q: Optional[str] = None, page: int = 1):
-    # La variable 'page' est maintenant utilisée dynamiquement
+    # 1. Création de la clé unique pour Redis (ex: "search_avatar_1" ou "popular_2")
+    cache_key = f"search_{q}_{page}" if q else f"popular_{page}"
+    
+    # 2. Vérification : Est-ce que les données sont déjà dans le cache ?
+    try:
+        cached_data = cache.get(cache_key)
+        if cached_data:
+            print(f"Depuis le CACHE ! (clé: {cache_key})")
+            return json.loads(cached_data)
+    except Exception as e:
+        print(f"Erreur de lecture Redis (ignorée): {e}")
+
+    # 3. Si non trouvé en cache -> On fait le travail normal via TMDB
     if q:
         url = f"https://api.themoviedb.org/3/search/movie?api_key={TMDB_API_KEY}&language=fr-FR&query={q}&page={page}"
     else:
@@ -152,6 +169,13 @@ def get_movies(q: Optional[str] = None, page: int = 1):
     # Parallélisation pour charger les 20 films d'une page instantanément
     with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
         movies_formatted = list(executor.map(fetch_movie_data, results))
+
+    # 4. Sauvegarde dans le cache pour les prochains utilisateurs (600 secondes = 10 minutes)
+    try:
+        cache.setex(cache_key, 600, json.dumps(movies_formatted))
+        print(f"Depuis TMDB et sauvegardées en cache ! (clé: {cache_key})")
+    except Exception as e:
+        print(f"Erreur d'écriture Redis (ignorée): {e}")
 
     return movies_formatted
 
@@ -198,3 +222,27 @@ def get_movie_details(movie_id: str):
     except Exception as e:
         print(f"Erreur API: {e}")
         raise HTTPException(status_code=500, detail="Erreur lors de la récupération des détails")
+    
+    
+@app.get("/movies/{movie_id}/recommendations")
+def get_recommendations(movie_id: int):
+    # On demande les recommandations à TMDB
+    url = f"https://api.themoviedb.org/3/movie/{movie_id}/recommendations?api_key={TMDB_API_KEY}&language=fr-FR"
+    
+    try:
+        response = requests.get(url)
+        data = response.json()
+        results = data.get("results", [])[:6] # On prend les 6 meilleurs
+        
+        recommendations = []
+        for item in results:
+            recommendations.append({
+                "id": item.get("id"),
+                "title": item.get("title"),
+                "image_url": f"https://image.tmdb.org/t/p/w500{item.get('poster_path')}" if item.get('poster_path') else "https://placehold.co/400x600",
+                "year": item.get("release_date", "")[:4] if item.get("release_date") else "N/A"
+            })
+        return recommendations
+    except Exception as e:
+        print(f"Erreur reco: {e}")
+        return []

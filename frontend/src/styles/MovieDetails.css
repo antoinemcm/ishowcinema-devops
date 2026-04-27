@@ -128,3 +128,68 @@
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
+
+
+/* --- SECTION RECOMMANDATIONS --- */
+.reco-section {
+  margin-top: 60px;
+  border-top: 1px solid #333;
+  padding-top: 30px;
+}
+
+.reco-section h3 {
+  font-size: 1.8rem;
+  margin-bottom: 25px;
+  border-left: 4px solid #e50914;
+  padding-left: 15px;
+}
+
+.reco-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 20px;
+}
+
+.reco-card {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  background: #1a1a1a;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid transparent;
+}
+
+.reco-card:hover {
+  transform: translateY(-10px);
+  border-color: #e50914;
+}
+
+.reco-card img {
+  width: 100%;
+  height: 210px;
+  object-fit: cover;
+}
+
+.reco-info {
+  padding: 10px;
+}
+
+.reco-info h4 {
+  margin: 0;
+  font-size: 0.9rem;
+  color: white;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.reco-info span {
+  font-size: 0.8rem;
+  color: #aaa;
+}
+
+@media (max-width: 480px) {
+  .reco-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 colonnes sur mobile */
+  }
+}
