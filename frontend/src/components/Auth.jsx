@@ -72,14 +72,14 @@ function Auth() {
           required 
         />
 
-        {/* --- CHAMP DE CONFIRMATION (Affiché seulement si Inscription) --- */}
+        {/* seulement si Inscription */}
         {!isLogin && (
           <input 
             type="password" 
             placeholder="Confirmer le mot de passe" 
             value={confirmPassword} 
             onChange={(e) => setConfirmPassword(e.target.value)} 
-            className="auth-input fade-in" // On ajoute une petite classe d'animation
+            className="auth-input fade-in" 
             required 
           />
         )}
@@ -92,7 +92,7 @@ function Auth() {
           {isLogin ? "Nouveau sur IShowCinema ?" : "Déjà membre ?"} 
           <span onClick={() => {
             setIsLogin(!isLogin);
-            setConfirmPassword(''); // Reset quand on bascule
+            setConfirmPassword(''); 
           }}>
             {isLogin ? " S'inscrire" : " Se connecter"}
           </span>

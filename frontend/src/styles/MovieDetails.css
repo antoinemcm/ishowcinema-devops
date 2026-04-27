@@ -1,5 +1,4 @@
 
-/*Détails sur le films*/
 .movie-details-page {
   max-width: 1000px;
   margin: 40px auto;
@@ -133,7 +132,7 @@
 }
 
 
-/*RECOMMANDATIONS*/
+/*Recommendations*/
 .reco-section {
   margin-top: 60px;
   border-top: 1px solid #333;

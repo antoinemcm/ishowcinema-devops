@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  # 1. LA BASE DE DONNÉES
+  #BASE DE DONNÉES
   mongodb:
     image: mongo:latest
     ports:
@@ -13,33 +13,28 @@ services:
     ports:
       - "6379:6379"
 
-  # 2. TON API FASTAPI
+  #FASTAPI
   backend:
     build: ./backend
     ports:
       - "8000:8000"
     volumes:
-      # Synchronise ton code local avec le conteneur en temps réel
       - ./backend:/app
     environment:
-      # L'adresse magique : on utilise le nom du service "mongodb" au lieu de "localhost"
       - MONGO_URI=mongodb://mongodb:27017/ishowcinema
     depends_on:
       - mongodb
 
-  # 3. TON SITE REACT/VITE
+  # 3REACT/VITE
   frontend:
     build: ./frontend
     ports:
       - "5173:5173"
     volumes:
-      # Synchronise ton code React
       - ./frontend:/app
-      # Empêche ton dossier node_modules local d'écraser celui du conteneur
       - /app/node_modules
     depends_on:
       - backend
 
-# Déclaration du volume persistant pour ne pas perdre tes données
 volumes:
   mongo_data:

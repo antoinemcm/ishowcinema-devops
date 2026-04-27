@@ -1,4 +1,3 @@
-/* Styles généraux */
 .movie-container {
   max-width: 1400px; 
   margin: 0 auto;
@@ -91,17 +90,16 @@
   display: inline-block;
 }
 
-/* --- LA GRILLE DE BOUTONS (FOOTER) --- */
+
 .card-footer-grid {
-  margin-top: auto; /* Pousse la grille tout en bas de la carte */
+  margin-top: auto; 
   display: grid;
-  grid-template-columns: 1fr 1fr; /* 2 colonnes parfaitement égales */
-  gap: 10px; /* Espace entre les deux boutons */
+  grid-template-columns: 1fr 1fr; 
+  gap: 10px; 
   border-top: 1px solid #2a2a2a;
   padding-top: 15px;
 }
 
-/* Base commune pour tous les boutons de la grille */
 .btn-grid {
   padding: 8px 5px;
   border-radius: 6px;
@@ -117,7 +115,7 @@
   width: 100%;
 }
 
-/* Bouton Détails (Gris/Transparent) */
+
 .btn-grid-details {
   background: rgba(255, 255, 255, 0.1);
   color: white;
@@ -129,7 +127,7 @@
   color: black;
 }
 
-/* Bouton Favoris (Sombre -> Rouge au survol) */
+
 .btn-grid-fav {
   background: #2a2a2a;
   color: white;
@@ -140,7 +138,7 @@
   transform: translateY(-2px);
 }
 
-/* Bouton Retirer (Rouge vif) */
+
 .btn-grid-remove {
   background: #e50914;
   color: white;
@@ -150,7 +148,7 @@
   background: #b20710;
 }
 
-/* Bouton Déjà Ajouté (Désactivé) */
+
 .btn-grid-added {
   background: rgba(46, 204, 113, 0.15);
   color: #2ecc71;

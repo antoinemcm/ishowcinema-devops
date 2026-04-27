@@ -26,10 +26,8 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  /* On a supprimé le flex et le centrage forcé ! */
 }
 
-/* Ajoute ceci juste en dessous pour forcer la page à prendre toute la largeur */
 #root {
   width: 100%;
   max-width: 100%;

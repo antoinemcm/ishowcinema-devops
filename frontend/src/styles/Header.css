@@ -1,5 +1,5 @@
 .header {
-  position: relative; /* Important pour que le logo se repère par rapport au header */
+  position: relative; 
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -8,12 +8,11 @@
   background-color: #000;
 }
 
-/* --- 1. Logo par défaut (Accueil) --- */
 
 .header-logo {
   justify-self: start;
   z-index: 10;
-  text-decoration: none !important; /* Force la suppression du soulignement */
+  text-decoration: none !important; 
 }
 
 .header-logo h1 {
@@ -23,14 +22,6 @@
   transition: color 0.2s ease;
 }
 
-/* Effet au survol (écrase le bleu clair de Vite) */
-/* .header-logo:hover h1 {
-  color: #ffffff; Devient blanc au survol pour un effet plus propre : commenté pcq pas sûr
-} */
-
-
-/* --- 2. Logo centré (Profil) --- */
-
 .header-logo.centered-logo {
   position: absolute;
   left: 50%;
@@ -39,41 +30,33 @@
   margin: 0;
 }
 
-/* Taille un peu plus grande quand il est au centre */
 .header-logo.centered-logo h1 {
   font-size: 2.5rem; 
 }
 
-/* Navigation à droite */
 .header-nav {
   display: flex;
   gap: 20px;
   align-items: center;
-  margin-left: auto; /* Pousse tout à droite sur l'accueil */
+  margin-left: auto; 
 }
 
-
-/* 2. La Barre de recherche (au centre) */
 .search-form {
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
   z-index: 10;
-  /* On s'assure que le formulaire ne restreint pas l'input */
   display: flex;
   justify-content: center;
 }
 
 .search-input {
-  padding: 12px 20px; /* Plus d'espace interne */
+  padding: 12px 20px; 
   border-radius: 6px;
   border: 1px solid #333;
-  
-  /* AUGMENTATION DE LA TAILLE ICI */
-  width: 500px; /* Tu peux mettre 600px si tu la veux encore plus grande */
-  max-width: 40vw; /* Sécurité pour que ça ne dépasse pas sur petit écran */
-  
+  width: 500px;
+  max-width: 40vw;  
   background-color: rgba(255, 255, 255, 0.1);
   color: white;
   font-size: 1rem;
@@ -84,10 +67,8 @@
 .search-input:focus {
   border-color: #e50914;
   background-color: rgba(255, 255, 255, 0.15);
-  width: 520px; /* Petit effet d'agrandissement au clic */
+  width: 520px;
 }
-
-/* ... reste du code ... */
 
 .btn-red {
   background-color: #e50914;
