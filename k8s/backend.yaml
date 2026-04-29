@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: backend
 spec:
-  replicas: 2 
+  replicas: 2
   selector:
     matchLabels:
       app: backend
@@ -13,23 +13,25 @@ spec:
         app: backend
     spec:
       containers:
-      - name: backend
-        image: opsci2025_tme4-backend
-        imagePullPolicy: Never 
-        ports:
-        - containerPort: 8000
-        env:
-        - name: MONGO_URI
-          value: "mongodb://mongodb-service:27017"
-        - name: REDIS_HOST
-          value: "redis"
+        - name: backend
+          image: opsci2025_tme4-backend:v1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+          env:
+            - name: MONGO_URI
+              value: "mongodb://mongodb-service:27017"
+            - name: REDIS_HOST
+              value: "redis"
+            - name : TMDB_TOKEN
+              value : c7d18e19b24cb397f78119b0008406ba
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: backend-service
 spec:
-  type: NodePort 
+  type: NodePort
   selector:
     app: backend
   ports:
