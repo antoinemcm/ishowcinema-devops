@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import MovieCard from "../components/MovieCard"; 
 import { useSearch } from '../context/SearchContext';
-import { useSearch } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 import '../styles/MovieList.css';
 
 function Home({ onMovieSelect }) {
