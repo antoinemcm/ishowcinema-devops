@@ -18,6 +18,7 @@ export function AuthProvider({ children }) {
   const logout = () => {
     sessionStorage.removeItem('username');
     setUsername(null);
+    window.location.href = '/';
   };
 
   return (
