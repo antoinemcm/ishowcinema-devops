@@ -16,6 +16,7 @@ services:
   #FASTAPI
   backend:
     build: ./backend
+    image: opsci2025_tme4-backend:latest
     ports:
       - "8000:8000"
     volumes:
@@ -28,6 +29,7 @@ services:
   # 3REACT/VITE
   frontend:
     build: ./frontend
+    image: opsci2025_tme4-frontend:latest
     ports:
       - "5173:5173"
     volumes:

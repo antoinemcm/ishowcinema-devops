@@ -10,6 +10,7 @@ from passlib.context import CryptContext
 from pydantic import BaseModel
 import redis
 import json
+import re
 
 load_dotenv()
 
@@ -104,6 +105,14 @@ def get_favorites_details(username: str):
 def signup(user: UserAuth):
     if not user.username or not user.password:
         raise HTTPException(status_code=400, detail="Champs manquants")
+    
+    # Vérification des contraintes mdp côté serveur
+    if (len(user.password) < 8 or 
+        not re.search(r"[A-Z]", user.password) or 
+        not re.search(r"[0-9]", user.password) or 
+        not re.search(r"[!@#$%^&*(),.?\":{}|<>]", user.password)):
+        raise HTTPException(status_code=400, detail="Le mot de passe ne respecte pas les critères de sécurité.")
+
     if users_collection.find_one({"username": user.username}):
         raise HTTPException(status_code=400, detail="Pseudo déjà pris")
     
@@ -119,15 +128,15 @@ def login(user: UserAuth):
     db_user = users_collection.find_one({"username": user.username.strip()})
     if db_user and pwd_context.verify(user.password.strip(), db_user["password"]):
         return {"message": "Succès", "username": user.username.strip()}
-    raise HTTPException(status_code=400, detail="Identifiants incorrects")
+    raise HTTPException(status_code=400, detail="Identifiant ou mot de passe incorrect. Veuillez réessayer.")
 
 # --- FILMS ---
 
 @app.get("/movies")
 def get_movies(q: Optional[str] = None, page: int = 1):
-    cache_key = f"search_{q}_{page}" if q else f"popular_{page}"
+    # --- MODIFIÉ : On ajoute "v2_" pour créer de toutes nouvelles clés ---
+    cache_key = f"v2_search_{q}_{page}" if q else f"v2_popular_{page}"
     
-    # données sont déjà dans le cache ?
     try:
         cached_data = cache.get(cache_key)
         if cached_data:
@@ -136,7 +145,6 @@ def get_movies(q: Optional[str] = None, page: int = 1):
     except Exception as e:
         print(f"Erreur de lecture Redis (ignorée): {e}")
 
-    # Si non via tmdb
     if q:
         url = f"https://api.themoviedb.org/3/search/movie?api_key={TMDB_API_KEY}&language=fr-FR&query={q}&page={page}"
     else:
@@ -145,6 +153,9 @@ def get_movies(q: Optional[str] = None, page: int = 1):
     response = requests.get(url)
     data = response.json()
     results = data.get("results", [])
+    
+    # NOUVEAU : On récupère le nombre total de pages (TMDB limite à 500 maximum)
+    total_pages = min(data.get("total_pages", 1), 500)
     
     def fetch_movie_data(item):
         movie_id = item.get("id")
@@ -167,18 +178,22 @@ def get_movies(q: Optional[str] = None, page: int = 1):
             "image_url": f"https://image.tmdb.org/t/p/w500{item.get('poster_path')}" if item.get('poster_path') else "https://placehold.co/400x600"
         }
 
-    # Parallélisation
     with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
         movies_formatted = list(executor.map(fetch_movie_data, results))
 
-    # Sauvegarde dans le cache
+    # NOUVEAU : On structure la réponse pour inclure total_pages
+    final_response = {
+        "results": movies_formatted,
+        "total_pages": total_pages
+    }
+
     try:
-        cache.setex(cache_key, 600, json.dumps(movies_formatted))
+        cache.setex(cache_key, 600, json.dumps(final_response))
         print(f"Depuis TMDB et sauvegardées en cache ! (clé: {cache_key})")
     except Exception as e:
         print(f"Erreur d'écriture Redis (ignorée): {e}")
 
-    return movies_formatted
+    return final_response
 
 @app.get("/movies/{movie_id}")
 def get_movie_details(movie_id: str):

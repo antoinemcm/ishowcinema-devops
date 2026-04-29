@@ -56,3 +56,24 @@
 .auth-toggle span:hover {
   text-decoration: underline;
 }
+
+/* Style minimaliste pour l'erreur dynamique du mot de passe */
+.password-dynamic-error {
+  color: #e50914; /* Rouge style Netflix */
+  font-size: 0.75rem; /* Texte en petit */
+  margin-top: -10px; /* Remonte le texte près de l'input */
+  margin-bottom: 15px;
+  text-align: left;
+  width: 100%;
+  padding-left: 5px;
+}
+
+/* Optionnel : petite animation d'apparition douce */
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
