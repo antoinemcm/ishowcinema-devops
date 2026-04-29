@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import MovieCard from "../components/MovieCard"; 
 import { useSearch } from '../context/SearchContext';
+import { useSearch } from '../context/AuthContext';
 import '../styles/MovieList.css';
 
 function Home({ onMovieSelect }) {
@@ -8,7 +9,7 @@ function Home({ onMovieSelect }) {
   const [page, setPage] = useState(1);
   const [favoriteIds, setFavoriteIds] = useState([]); 
   const { searchQuery } = useSearch();
-  const username = sessionStorage.getItem('username');
+  const username = useAuth();
 
 
   useEffect(() => {
@@ -51,6 +52,8 @@ function Home({ onMovieSelect }) {
         .then(res => res.json())
         .then(data => setFavoriteIds(data.map(m => String(m.id))))
         .catch(err => console.error("Erreur favs:", err));
+    } else {
+      setFavoriteIds([]);
     }
   }, [username]);
 
