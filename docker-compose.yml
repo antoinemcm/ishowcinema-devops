@@ -1,40 +1,52 @@
 version: '3.8'
 
 services:
-  #BASE DE DONNÉES
+  # BASE DE DONNÉES
   mongodb:
     image: mongo:latest
+    container_name: mongodb-1
     ports:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
+
   redis:
-    image: redis:alpine
+    image: redis/redis-stack-server:latest # Version avec modules (recommandée)
+    container_name: redis-1
     ports:
       - "6379:6379"
 
-  #FASTAPI
+  # BACKEND (FASTAPI)
   backend:
     build: ./backend
+    container_name: backend-1
     image: opsci2025_tme4-backend:latest
     ports:
       - "8000:8000"
     volumes:
       - ./backend:/app
+    env_file:
+      - .env
     environment:
-      - MONGO_URI=mongodb://mongodb:27017/ishowcinema
+      - TMDB_TOKEN=${TMDB_TOKEN}
+      - MONGO_URI=mongodb://mongodb:27017/
+      - REDIS_HOST=redis
     depends_on:
       - mongodb
+      - redis
 
-  # 3REACT/VITE
+  # FRONTEND (REACT/VITE)
   frontend:
     build: ./frontend
+    container_name: frontend-1
     image: opsci2025_tme4-frontend:latest
     ports:
       - "5173:5173"
     volumes:
       - ./frontend:/app
       - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:8000
     depends_on:
       - backend
 

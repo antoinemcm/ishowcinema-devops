@@ -1,37 +1,50 @@
 #!/bin/bash
 
-# 1. Vérifier si Minikube tourne
+set -e
+
+VERSION=v1
+
 if ! minikube status > /dev/null 2>&1; then
     echo -e "Démarrage de Minikube"
     minikube start
 fi
 
-# 2. Builder les images Docker localement
-echo -e "Construction des images Docker"
-docker compose build
+echo "Build des images"
+docker build -t opsci2025_tme4-backend:$VERSION ./backend
+docker build -t opsci2025_tme4-frontend:$VERSION ./frontend
 
-# 3. Charger les images dans le cache de Minikube
-echo -e "Chargement des images dans Minikube (cela peut prendre un moment)"
-minikube image load opsci2025_tme4-frontend:latest
-minikube image load opsci2025_tme4-backend:latest
+echo "Chargement dans Minikube"
+minikube image load opsci2025_tme4-backend:$VERSION
+minikube image load opsci2025_tme4-frontend:$VERSION
 
-# 4. Appliquer les fichiers Kubernetes
-echo -e "Déploiement des fichiers YAML"
+echo "🧹 Suppression anciens déploiements"
+kubectl delete -f k8s/ --ignore-not-found
+
+# LA PAUSE CRUCIALE (Laisse le temps à Kubernetes de nettoyer)
+echo "Pause de 5 secondes pour le nettoyage..."
+sleep 5
+
+echo "Déploiement Kubernetes"
 kubectl apply -f k8s/
 
-# 5. Attendre que les Pods soient prêts
-echo -e "Attente du démarrage des Pods"
-kubectl wait --for=condition=ready pod -l app=frontend --timeout=60s
+echo "Attente de la stabilisation des déploiements"
+# LA CORRECTION EST ICI : on surveille le déploiement général, pas les petits pods
+kubectl rollout status deployment/backend --timeout=120s
+kubectl rollout status deployment/frontend --timeout=120s
+kubectl rollout status deployment/mongodb-deployment --timeout=120s
+kubectl rollout status deployment/redis --timeout=120s
 
-# 6. Lancement des tunnels en arrière-plan
-echo -e "Lancement des tunnels"
-pkill -f "port-forward"
-kubectl port-forward service/frontend-service 5173:5173 > /dev/null 2>&1 &
-kubectl port-forward service/backend-service 8000:8000 > /dev/null 2>&1 &
+echo "Port forwarding"
+pkill -f "port-forward" || true
+# On utilise 0.0.0.0 pour que tu puisses y accéder depuis le navigateur de ton vrai PC
+kubectl port-forward --address 0.0.0.0 service/frontend-service 5173:5173 > /dev/null 2>&1 &
+kubectl port-forward --address 0.0.0.0 service/backend-service 8000:8000 > /dev/null 2>&1 &
 
-
-echo -e "DÉPLOIEMENT TERMINÉ AVEC SUCCÈS !"
-echo -e "Site : http://localhost:5173${NC}"
-echo -e "API Docs : http://localhost:8000/docs"
-echo "Laissez ce terminal ouvert pour garder les tunnels actifs."
+echo ""
+echo "DÉPLOIEMENT OK"
+# On récupère automatiquement l'IP de ta VM pour te donner le bon lien
+echo "Frontend : http://localhost:5173"
+echo "API Docs : http://localhost:8000/docs"
+echo ""
+echo " Laisse ce terminal ouvert"
 wait
