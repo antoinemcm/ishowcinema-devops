@@ -1,35 +1,51 @@
 import '../styles/MovieList.css';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 function MovieCard({ movie, showRemove = false, onRemove, isFavorite, onAdd }) {
-  const currentUser = sessionStorage.getItem('username');
+  // On vérifie les deux stockages pour respecter le choix "Se souvenir de moi"
+  const currentUser = localStorage.getItem('username') || sessionStorage.getItem('username');
   const navigate = useNavigate(); 
 
   const handleAddFavorite = async () => {
-    if (!currentUser) return alert("Connecte-toi pour ajouter des favoris !");
+    if (!currentUser) {
+      // MODIFIÉ : Une belle erreur non bloquante
+      toast.error("Connecte-toi pour ajouter des favoris !");
+      return;
+    }
+    
     try {
       const params = new URLSearchParams({ username: currentUser, movie_title: movie.title, movie_id: movie.id });
       const response = await fetch(`http://localhost:8000/add-favorite?${params.toString()}`, { method: 'POST' });
       if (response.ok){
         if (onAdd) onAdd();
-        alert(`❤️ "${movie.title}" a été ajouté !`);
+        toast.success(`${movie.title} a été ajouté aux favoris !`);
       } 
     } catch (error) {
       console.error("Erreur ajout favori:", error);
+      toast.error("Erreur lors de l'ajout aux favoris.");
     }
   };
 
   const handleRemoveFavorite = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!window.confirm(`Retirer "${movie.title}" de tes favoris ?`)) return;
+    
+    // SUPPRIMÉ : Le window.confirm() qui bloquait l'écran. 
+    // L'action est maintenant immédiate et réversible par l'utilisateur s'il le souhaite.
 
     try {
       const params = new URLSearchParams({ username: currentUser, movie_title: movie.title, movie_id: movie.id });
       const response = await fetch(`http://localhost:8000/remove-favorite?${params.toString()}`, { method: 'POST' });
-      if (response.ok) { if (onRemove) onRemove(); }
+      
+      if (response.ok) { 
+        if (onRemove) onRemove(); 
+        // NOUVEAU : On confirme discrètement le retrait
+        toast.success(`"${movie.title}" retiré de tes favoris.`);
+      }
     } catch (error) {
-      alert("Erreur lors de la suppression");
+      // MODIFIÉ : Remplacement du alert()
+      toast.error("Erreur lors de la suppression.");
     }
   };
 

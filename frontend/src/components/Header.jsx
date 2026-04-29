@@ -8,7 +8,6 @@ function Header() {
   const { searchQuery, setSearchQuery } = useSearch();
   const { username, logout } = useAuth();
 
-
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -17,6 +16,11 @@ function Header() {
     navigate('/'); 
   };
 
+  // Fonction pour réinitialiser la recherche 
+  const handleLogoClick = () => {
+    setSearchQuery(''); // Vide la barre de recherche
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // Remonte en haut de la page
+  };
 
   const isSimpleMode = location.pathname.includes('/profile') || 
                        location.pathname.includes('/movie') || 
@@ -24,7 +28,13 @@ function Header() {
 
   return (
     <header className="header">
-      <Link to="/" className={`header-logo ${isSimpleMode ? 'centered-logo' : ''}`} style={{ textDecoration: 'none' }}>
+      {/* Ajout du déclencheur onClick */}
+      <Link 
+        to="/" 
+        onClick={handleLogoClick}
+        className={`header-logo ${isSimpleMode ? 'centered-logo' : ''}`} 
+        style={{ textDecoration: 'none' }}
+      >
         <h1>🍿 IShowCinema</h1>
       </Link>
 
