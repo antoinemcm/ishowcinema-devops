@@ -26,6 +26,12 @@ chmod +x start.sh
 ./start.sh
 ```
 
+ou autre méthode : 
+
+```bash
+docker compose up --build
+```
+
 **Accès :**
 * 🌐 **Site Web** : [http://localhost:5173](http://localhost:5173)
 * ⚙️ **API Documentation** : [http://localhost:8000/docs](http://localhost:8000/docs)
@@ -54,5 +60,5 @@ chmod +x start.sh
 ## 👤 Auteurs
 Projet réalisé dans le cadre de l'UE Opsci 2026.
 
-HALILOU Yanis 
--SAURET Antoine 
+ * HALILOU Yanis 
+ * -SAURET Antoine 
