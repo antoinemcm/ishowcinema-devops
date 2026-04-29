@@ -17,7 +17,7 @@ load_dotenv()
 app = FastAPI()
 
 # API 
-TMDB_API_KEY = "c7d18e19b24cb397f78119b0008406ba"
+TMDB_API_KEY = os.getenv("TMDB_TOKEN")
 
 # BDD
 MONGO_URI = os.getenv("MONGO_URI", "mongodb://mongodb-service:27017/")

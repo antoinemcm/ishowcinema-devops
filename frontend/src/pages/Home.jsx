@@ -2,15 +2,17 @@ import { useEffect, useState } from 'react';
 import MovieCard from "../components/MovieCard"; 
 import SkeletonCard from "../components/SkeletonCard";
 import { useSearch } from '../context/SearchContext';
+import { useAuth } from '../context/AuthContext';
 import '../styles/MovieList.css';
 
 function Home({ onMovieSelect }) {
   const [movies, setMovies] = useState([]);
   const [page, setPage] = useState(1);
   const [favoriteIds, setFavoriteIds] = useState([]); 
-  
+
   const [isLoading, setIsLoading] = useState(true);
-  const [totalPages, setTotalPages] = useState(1); // NOUVEAU : L'état pour le total des pages
+  const [totalPages, setTotalPages] = useState(1);
+
 
   const { searchQuery } = useSearch();
   const username = localStorage.getItem('username') || sessionStorage.getItem('username');
@@ -66,6 +68,8 @@ function Home({ onMovieSelect }) {
         .then(res => res.json())
         .then(data => setFavoriteIds(data.map(m => String(m.id))))
         .catch(err => console.error("Erreur favs:", err));
+    } else {
+      setFavoriteIds([]);
     }
   }, [username]);
 
@@ -73,7 +77,6 @@ function Home({ onMovieSelect }) {
     setFavoriteIds(prevIds => [...prevIds, String(movieId)]);
   };
 
-  // --- NOUVEAU : La logique mathématique du standard avec Ellipses ---
   const renderPagination = () => {
     const pages = [];
     if (totalPages <= 1) return null; // Pas de menu si une seule page

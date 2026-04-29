@@ -26,6 +26,7 @@ export function AuthProvider({ children }) {
     localStorage.removeItem('username');
     sessionStorage.removeItem('username');
     setUsername(null);
+    window.location.href = '/';
   };
 
   return (

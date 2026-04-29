@@ -13,7 +13,10 @@ function Header() {
 
   const handleLogout = () => {
     logout(); 
-    navigate('/'); 
+    sessionStorage.clear();
+    localStorage.clear();
+    window.location.replace('/'); 
+    window.location.reload();
   };
 
   // Fonction pour réinitialiser la recherche 
