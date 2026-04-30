@@ -2,6 +2,12 @@
 
 Ce projet est une application web permettant de consulter des films, de s'inscrire et de gérer ses favoris. 
 
+## 🔗 Liens Importants
+* **▶️ Vidéo de présentation (Google Drive)** : https://drive.google.com/file/d/13ByBYXlqErf5P-kQQ_cjOyEpUc63nY6Z/view?usp=sharing
+* **💻 Dépôt GitLab (Code source & CI/CD)** : https://gitlab.com/yanishalilou/ishowcinema
+
+---
+
 ## 🏗 Architecture du Projet
 
 L'application est découpée en plusieurs composants :
