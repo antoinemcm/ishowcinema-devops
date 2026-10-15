@@ -5,6 +5,7 @@ Ce projet est une application web permettant de consulter des films, de s'inscri
 ## 🔗 Liens Importants
 * **▶️ Vidéo de présentation (Google Drive)** : https://drive.google.com/file/d/13ByBYXlqErf5P-kQQ_cjOyEpUc63nY6Z/view?usp=sharing
 * **💻 Dépôt GitLab (Code source & CI/CD)** : https://gitlab.com/yanishalilou/ishowcinema
+* 📄 [Consulter le rapport du projet (PDF)](RAPPORT_PROJET_IShowCinema.pdf)
 
 ---
 
@@ -66,5 +67,5 @@ docker compose up --build
 ## 👤 Auteurs
 Projet réalisé dans le cadre de l'UE Opsci 2026.
 
- * HALILOU Yanis 
- * -SAURET Antoine 
+ * Yanis H. 
+ * Antoine M. 
